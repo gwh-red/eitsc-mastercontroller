@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allimu.mastercontroller.dao.DeviceBindInfoDao">
+<!--临时绑定表的查找，更新和查询 -->
+	<insert id="saveDeviceBindInfo" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into device_bind_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">school_code,</if>
+			<if test="schoolName!=null">school_name,</if>
+			<if test="buildCode!=null">build_code,</if>
+			<if test="buildName!=null">build_name,</if>
+			<if test="classRoomCode!=null">class_room_code,</if>
+			<if test="classRoomName!=null">class_room_name,</if>
+			<if test="isUpload!=null">is_upload, </if>
+			<if test="equipmentType!=null">equipment_type,</if>
+			<if test="tempId!=null">temp_id, </if>
+			<if test="createTime!=null">create_time,</if>
+			<if test="mark">mark</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">#{schoolCode,jdbcType=BIGINT},</if>
+			<if test="schoolName!=null">#{schoolName,jdbcType=VARCHAR},</if>
+			<if test="buildCode!=null">#{buildCode,jdbcType=BIGINT},</if>
+			<if test="buildName!=null">#{buildName,jdbcType=VARCHAR},</if>
+			<if test="classRoomCode!=null">#{classRoomCode,jdbcType=BIGINT},</if>
+			<if test="classRoomName!=null">#{classRoomName,jdbcType=VARCHAR},</if>
+			<if test="isUpload!=null">#{isUpload,jdbcType=BOOLEAN}, </if>
+			<if test="equipmentType!=null">#{equipmentType,jdbcType=VARCHAR},</if>
+			<if test="tempId!=null">#{tempId,jdbcType=BIGINT}, </if>
+			<if test="createTime!=null"> #{createTime,jdbcType=TIMESTAMP},</if>
+			<if test="mark!=null"> #{mark,jdbcType=VARCHAR}</if>
+		</trim>
+	</insert>
+	
+	<select id="getDeviceBindInfo" resultType="DeviceBindInfo">
+		SELECT * FROM
+		device_bind_info WHERE is_upload=false AND school_code = #{schoolCode}
+	</select>
+	
+	<update id="updateDeviceBindInfoList"
+		parameterType="java.util.List">
+		UPDATE device_bind_info SET is_upload=true WHERE
+		id IN
+		<foreach collection="deviceBindInfoList" item="deviceBindInfo" open="("
+			separator="," close=")">
+			#{deviceBindInfo.id}
+		</foreach>
+	</update>
+	
+</mapper>

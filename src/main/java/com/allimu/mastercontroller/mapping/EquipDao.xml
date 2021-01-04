@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allimu.mastercontroller.dao.EquipDao">
+	<!-- <cache type="com.allimu.mastercontroller.jedis.tool.RedisCache"
+		eviction="FIFO" size="512" readOnly="true" /> -->
+
+
+	<insert id="saveSnEquip" useGeneratedKeys="true"
+		keyProperty="id">
+
+		insert into equip_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">school_code,</if>
+			<if test="schoolName!=null">school_name,</if>
+			<if test="buildCode!=null">build_code,</if>
+			<if test="buildName!=null">build_name,</if>
+			<if test="classCode!=null">class_code,</if>
+			<if test="className!=null">class_name,</if>
+			<if test="code!=null">code,</if>
+			<if test="name!=null">name,</if>
+			<if test="typeName!=null">type_name,</if>
+			<if test="sn!=null">sn,</if>
+			<if test="createTime!=null">create_time,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">#{schoolCode,jdbcType=BIGINT},</if>
+			<if test="schoolName!=null">#{schoolName,jdbcType=VARCHAR},</if>
+			<if test="buildCode!=null">#{buildCode,jdbcType=BIGINT},</if>
+			<if test="buildName!=null">#{buildName,jdbcType=VARCHAR},</if>
+			<if test="classCode!=null">#{classCode,jdbcType=BIGINT},</if>
+			<if test="className!=null">#{className,jdbcType=VARCHAR},</if>
+			<if test="code!=null">#{code,jdbcType=VARCHAR},</if>
+			<if test="name!=null">#{name,jdbcType=VARCHAR},</if>
+			<if test="typeName!=null">#{typeName,jdbcType=VARCHAR},</if>
+			<if test="sn!=null">#{sn,jdbcType=VARCHAR},</if>
+			<if test="createTime!=null"> #{createTime,jdbcType=TIMESTAMP}</if>	
+		</trim>
+
+	</insert>
+
+	<select id="getSnEquipBySn" resultType="Equip">
+		select * from equip_info
+		where sn=#{sn}
+	</select>
+
+	<select id="getSnByEquipmentCode" resultType="java.lang.String">
+		select sn from
+		equip_info
+		where code =#{equipmentCode}
+	</select>
+	
+	
+	<select id="getSnEquipByEquipmentCode" resultType="Equip">
+		select * from equip_info where code=#{equipmentCode}
+	</select>
+	
+	<select id="getSnEquipByParams" resultType="Equip">
+		select * from equip_info
+		where sn=#{sn} and school_code=#{schoolCode}
+	</select>
+	
+</mapper>
