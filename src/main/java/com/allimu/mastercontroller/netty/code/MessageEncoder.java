@@ -33,8 +33,10 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         out.add(sendBuf);
     }
 
+    //生成指令
     private void instructionCodeToByte(ByteBuf sendBuf, InstructionCode req) {
         byte type = req.getType();
+        System.out.println("MessageEecoder-tag----:" + type);
         if (type == (byte) 0x81) {
             getAllDevice(sendBuf, req);
         } else if (type == (byte) 0x82 || type == (byte) 0xad) {
@@ -108,15 +110,13 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
     }
 
 
-    //发送指令
     private void getAllDevice(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
         sendBuf.writeByte(0xfe);
         sendBuf.writeByte(req.getType());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
-        System.out.println(sendBuf.readableBytes());
-        System.out.println("------");
+        System.out.println("MessageEncoder.getAllDevice()：" + sendBuf.readableBytes());
     }
 
     //设置指定设备的设备状态
@@ -135,9 +135,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getState());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
-
-        System.out.println("yes");
-
+        System.out.println("MessageEncoder.setDeviceState()：" + sendBuf.readableBytes());
     }
 
     private void getOneDevice(ByteBuf sendBuf, InstructionCode req) {
@@ -273,8 +271,6 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeShort(0);
         sendBuf.writeByte(req.getEndpoint());
         sendBuf.writeShort(0);
-//		sendBuf.writeBytes(TypeConverter.hexStrToBytes("030ae307"));
-//		sendBuf.writeBytes(TypeConverter.hexStrToBytes("0301e407"));
         sendBuf.writeBytes(TypeConverter.dateStrTobytes(req.getStartTime()));
         sendBuf.writeBytes(TypeConverter.dateStrTobytes(req.getEndTime()));
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));

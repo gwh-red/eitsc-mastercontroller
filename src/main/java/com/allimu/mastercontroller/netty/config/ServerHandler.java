@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author OuYang
- * 业务逻辑处理器
+ * 业务逻辑处理器--接收指令
  */
 @Component
 @Sharable
@@ -26,15 +26,20 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         Message message = (Message) msg;
         byte tag = message.getTag();
 
-        System.out.println("接收------------------------");
-
+        //System.out.println("接收-----------------------------");
+        // System.out.println("tag:" + tag);
+        //System.out.println("Message:" + message);
         if (tag == (byte) 0x07 || tag == (byte) 0xb2) {
+            // System.out.println("1");
             deviceService.saveDeviceTrueState(message);
         } else if (tag == (byte) 0xb6 || tag == (byte) 0xb5) {
+            // System.out.println("2");
             deviceService.saveElectricityConsumption(message);
         } else if (tag == (byte) 0x70) {
+            //System.out.println("3");
             deviceService.saveEnvironmentalData(message);
         } else if (tag == (byte) 0x01) {
+            //System.out.println("4");
             deviceService.saveDeviceBindInfo(message, ctx);
         } else if (tag == (byte) 0x1f) {
             System.out.println(">> 心跳检测消息：" + message);
