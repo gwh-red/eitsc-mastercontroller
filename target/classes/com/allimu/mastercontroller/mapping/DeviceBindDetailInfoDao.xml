@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.allimu.mastercontroller.dao.DeviceBindDetailInfoDao">
+	<!-- <cache type="com.allimu.mastercontroller.jedis.tool.RedisCache"
+		eviction="FIFO" size="512" readOnly="true" /> -->
+	<select id="getDeviceBindDetailInfoByFactorys" resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where sn=#{sn} and address=#{address} and
+		endpoint =#{endpoint} /*and equipment_code is not null*/
+	</select>
+	
+	<insert id="saveDeviceBindDetailInfo" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into device_bind_detail_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">school_code,</if>
+			<if test="schoolName!=null">school_name,</if>
+			<if test="buildCode!=null">build_code,</if>
+			<if test="buildName!=null">build_name,</if>
+			<if test="classRoomCode!=null">class_room_code,</if>
+			<if test="classRoomName!=null">class_room_name,</if>
+			<if test="equipmentCode!=null">equipment_code,</if>
+			<if test="equipmentName!=null">equipment_name,</if>
+			<if test="sn!=null">sn,</if>
+			<if test="address!=null">address,</if>
+			<if test="endpoint!=null">endpoint,</if>
+			<if test="device!=null">device,</if>
+			<if test="ieee!=null">ieee,</if>
+			<if test="state!=null">state,</if>
+			<if test="createTime!=null">create_time</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="schoolCode!=null">#{schoolCode,jdbcType=BIGINT},</if>
+			<if test="schoolName!=null">#{schoolName,jdbcType=VARCHAR},</if>
+			<if test="buildCode!=null">#{buildCode,jdbcType=BIGINT},</if>
+			<if test="buildName!=null">#{buildName,jdbcType=VARCHAR},</if>
+			<if test="classRoomCode!=null">#{classRoomCode,jdbcType=BIGINT},</if>
+			<if test="classRoomName!=null">#{classRoomName,jdbcType=VARCHAR},</if>
+			<if test="equipmentCode!=null">#{equipmentCode,jdbcType=VARCHAR},</if>
+			<if test="equipmentName!=null">#{equipmentName,jdbcType=VARCHAR},</if>
+			<if test="sn!=null">#{sn,jdbcType=VARCHAR}, </if>
+			<if test="address!=null">#{address,jdbcType=SMALLINT},</if>
+			<if test="endpoint!=null">#{endpoint,jdbcType=TINYINT},</if>
+			<if test="device!=null">#{device,jdbcType=TINYINT},</if>
+			<if test="ieee!=null">#{ieee,jdbcType=BIGINT},</if>
+			<if test="state!=null">#{state,jdbcType=TINYINT},</if>		
+			<if test="createTime!=null"> #{createTime,jdbcType=TIMESTAMP}</if>	
+		</trim>
+	</insert>
+	
+	<select id="getDeviceBindDetailInfoByEquipmentCode"
+		resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where
+		equipment_code=#{equipmentCode}
+	</select>
+	
+	<select id="getDeviceBindDetailInfoByTempId"
+		resultType="DeviceBindDetailInfo">
+		select * from
+		device_bind_detail_info where id=#{id}
+	</select>
+	
+	
+	<update id="updateDeviceBindDetailInfo">
+		update device_bind_detail_info
+		<set>
+			<if test="schoolCode!=null">school_code=#{schoolCode},</if>
+			<if test="schoolName!=null">school_name=#{schoolName},</if>
+			<if test="buildCode!=null">build_code=#{buildCode},</if>
+			<if test="buildName!=null">build_name=#{buildName},</if>
+			<if test="classRoomCode!=null">class_room_code=#{classRoomCode},</if>
+			<if test="classRoomName!=null">class_room_name=#{classRoomName},</if>
+			<if test="equipmentCode!=null">equipment_code=#{equipmentCode},</if>
+			<if test="equipmentName!=null">equipment_name=#{equipmentName},</if>
+			<if test="sn!=null">sn=#{sn},</if>
+			<if test="address!=null">address=#{address},</if>
+			<if test="endpoint!=null">endpoint=#{endpoint},</if>
+			<if test="device!=null">device=#{device},</if>
+			<if test="ieee!=null">ieee=#{ieee},</if>
+			<if test="state!=null">state=#{state},</if>
+		</set>
+		where id=#{id}
+
+	</update>
+	
+	<select id="getEleDevice" resultType="DeviceBindDetailInfo">
+		select * from
+		device_bind_detail_info where school_code=#{schoolCode} and
+		device=9
+		group by ieee
+	</select>
+	
+	<select id="getDeviceBindDetailInfoListByIeee" resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where ieee=#{ieee} and 
+		endpoint=#{endpoint}
+	</select>
+	
+	<select id="getDeviceBindDetailInfoByIeee" resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where ieee=#{ieee} and endpoint=#{endpoint}
+	</select>
+	
+	<select id="getDeviceBindDetailInfoBySn" resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where sn=#{sn}
+	</select>
+	
+	<select id="getReadDevice" resultType="DeviceBindDetailInfo">
+		select * from device_bind_detail_info where ieee=#{ieee} and device=6
+	</select>
+	
+	</mapper>
