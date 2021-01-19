@@ -36,7 +36,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
     //生成指令
     private void instructionCodeToByte(ByteBuf sendBuf, InstructionCode req) {
         byte type = req.getType();
-        System.out.println("MessageEecoder-tag----:" + type);
+        System.out.println("MessageEecoder-type----:" + type);
         if (type == (byte) 0x81) {
             getAllDevice(sendBuf, req);
         } else if (type == (byte) 0x82 || type == (byte) 0xad) {
@@ -71,7 +71,11 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
             addDevice(sendBuf, req);
         } else if (type == (byte) 0x9e) {
             setInterval(sendBuf, req);
+        } else if (type == (byte) 0xa9) {// 获取红外控制器
+            getAllInfrared(sendBuf, req);
         }
+
+        System.out.println("-1");
     }
 
     private void setInterval(ByteBuf sendBuf, InstructionCode req) {
@@ -110,14 +114,24 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
     }
 
 
+    // 获取全部设备
     private void getAllDevice(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
         sendBuf.writeByte(0xfe);
         sendBuf.writeByte(req.getType());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
-        System.out.println("MessageEncoder.getAllDevice()：" + sendBuf.readableBytes());
     }
+
+    // 获取红外控制器
+    private void getAllInfrared(ByteBuf sendBuf, InstructionCode req) {
+        sendBuf.writeShort(0x0);
+        sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
+        sendBuf.writeByte(0xfe);
+        sendBuf.writeByte(req.getType());
+        sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
+    }
+
 
     //设置指定设备的设备状态
     private void setDeviceState(ByteBuf sendBuf, InstructionCode req) {

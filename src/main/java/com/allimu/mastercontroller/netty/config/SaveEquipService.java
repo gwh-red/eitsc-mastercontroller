@@ -38,7 +38,9 @@ public class SaveEquipService implements ApplicationListener<ContextRefreshedEve
             String str = remoteService.getWgEquipBySchoolCode(CommonUtil.schoolCode);
 
             JSONObject jsonObject = JSONObject.parseObject(str);
+
             System.out.println(" >> 查看str：" + jsonObject);
+
             String res = jsonObject.getString("data");
             if (res != null && !res.equals("[]")) {
                 List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {

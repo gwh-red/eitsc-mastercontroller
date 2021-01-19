@@ -1,4 +1,4 @@
-package com.allimu.mastercontroller.serviceImpl;
+package com.allimu.mastercontroller.service.impl;
 
 import com.allimu.mastercontroller.dao.*;
 import com.allimu.mastercontroller.netty.code.Constant;
@@ -27,6 +27,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private DeviceBindDetailInfoDao deviceBindDetailInfoDao;
     @Autowired
+    private DeviceInfraredInfoDao deviceInfraredInfoDao;
+    @Autowired
     private EnvironmentalDataDao environmentalDataDao;
     @Autowired
     private ElectricityConsumptionDao electricityConsumptionDao;
@@ -34,11 +36,30 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceStateDao deviceStateDao;
     @Autowired
     private EquipDao equipDao;
+
+
     @Autowired
     InstructionCodeRemoteService instructionCodeRemoteService;
 
 
     private Long schoolCode = CommonUtil.schoolCode;
+
+    @Override
+    public void saveDeviceInfraredInfo(Message message) {
+
+        DeviceInfraredInfo deviceInfraredInfo = (DeviceInfraredInfo) message.getObject();
+
+        deviceInfraredInfo.setCreateTime(new Date());
+        deviceInfraredInfo.setSn(message.getSn());
+        DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(deviceInfraredInfo.getAddress(), deviceInfraredInfo.getRows());
+        if (dii == null) {
+            deviceInfraredInfoDao.saveDerviceInfraredInfo(deviceInfraredInfo);
+        } else {
+            System.out.println("遥控器指令已获取！");
+        }
+
+
+    }
 
     /**
      * 保存设备连接信息与设备绑定信息
@@ -50,21 +71,30 @@ public class DeviceServiceImpl implements DeviceService {
         DeviceBindDetailInfo deviceBindDetailInfo = (DeviceBindDetailInfo) message.getObject();
         System.out.println("项目启动获取网关的链接设备。");
         deviceBindDetailInfo.setCreateTime(new Date());
-        System.out.println(snEquip);
+
         if (snEquip != null) {
             deviceBindDetailInfo.setSchoolCode(snEquip.getSchoolCode());
             deviceBindDetailInfo.setSchoolName(snEquip.getSchoolName());
             deviceBindDetailInfo.setBuildCode(snEquip.getBuildCode());
             deviceBindDetailInfo.setBuildName(snEquip.getBuildName());
 
-            deviceBindDetailInfo.setClassRoomCode(snEquip.getClassCode());
-            deviceBindDetailInfo.setClassRoomName(snEquip.getClassName());
+            //deviceBindDetailInfo.setClassRoomCode(snEquip.getClassCode());
+            //deviceBindDetailInfo.setClassRoomName(snEquip.getClassName());
         }
         System.out.println(">> 已连接网关的设备信息 >>" + deviceBindDetailInfo);
 
         DeviceBindDetailInfo dbdi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByIeee(deviceBindDetailInfo.getIeee(),
                 deviceBindDetailInfo.getEndpoint());
-        if (deviceBindDetailInfo.getDevice() != (short) 0x0006) {
+
+        if (dbdi == null) {
+            deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
+
+            buildDeviceBindInfo(deviceBindDetailInfo);
+        } else {
+            // 更新设备连接信息
+            deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
+        }
+       /* if (deviceBindDetailInfo.getDevice() != (short) 0x0006) {
             if (dbdi == null) {
                 deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
 
@@ -72,16 +102,14 @@ public class DeviceServiceImpl implements DeviceService {
             } else {
                 // 更新设备连接信息
                 deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
-            }
         } else {
-            //获取设备
             //查询有哪些红外
             int readDeviceCount = instructionCodeRemoteService.getReadDeviceCount(deviceBindDetailInfo.getSchoolCode(),
                     deviceBindDetailInfo.getBuildCode(), deviceBindDetailInfo.getClassRoomCode());
+
             //根据设备ieee地址和端点地址查询设备连接信息
             List<DeviceBindDetailInfo> readDeviceList = deviceBindDetailInfoDao.getDeviceBindDetailInfoListByIeee(
                     deviceBindDetailInfo.getIeee(), deviceBindDetailInfo.getEndpoint());
-
             //这个地方逻辑有点问题
             if (readDeviceCount != readDeviceList.size()) {
                 for (int i = 0; i < readDeviceCount - readDeviceList.size(); i++) {
@@ -91,30 +119,9 @@ public class DeviceServiceImpl implements DeviceService {
                         buildDeviceBindInfo(dbdiObj);
                     }
                 }
-               /* int k = 0;
-                System.out.println("readDeviceCount:" + readDeviceCount);
-                System.out.println("readDeviceList。size:" + readDeviceList.size());
-                if (readDeviceList.size() == 0) {
-                    System.out.print(k++);
-                    if (dbdi == null) {
-                        DeviceBindDetailInfo dbdiObj = deviceBindDetailInfo.clone();
-                        deviceBindDetailInfoDao.saveDeviceBindDetailInfo(dbdiObj);
-                        buildDeviceBindInfo(dbdiObj);
-                    }
-                } else {
-                    System.out.print(k++);
-                    for (int i = 0; i < readDeviceCount - readDeviceList.size(); i++) {
-                        if (dbdi == null) {
-                            DeviceBindDetailInfo dbdiObj = deviceBindDetailInfo.clone();
-                            deviceBindDetailInfoDao.saveDeviceBindDetailInfo(dbdiObj);
-                            buildDeviceBindInfo(dbdiObj);
-                        }
-                    }
-                }*/
-
             } else if (readDeviceCount == readDeviceList.size()) { // 如果相等，是发生了断网重连
             }
-        }
+        }*/
 
     }
 
@@ -211,7 +218,7 @@ public class DeviceServiceImpl implements DeviceService {
     public void saveDeviceTrueState(Message message) {
         DeviceBindDetailInfo deviceBindDetailInfo = deviceBindDetailInfoDao
                 .getDeviceBindDetailInfoByFactorys(message.getSn(), message.getAddress(), message.getEndpoint());
-        //System.out.println(message);
+        System.out.println("saveDeviceTrueState:" + message);
         if (deviceBindDetailInfo != null && deviceBindDetailInfo.getEquipmentCode() != null) {
 
             deviceBindDetailInfo.setState(message.getState());
@@ -258,6 +265,7 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
+
     /**
      * 设备状态改变，新增一条数据
      *
@@ -278,20 +286,21 @@ public class DeviceServiceImpl implements DeviceService {
             deviceState.setEquipmentName(dbdi.getEquipmentName());
             deviceState.setState(dbdi.getState());
             deviceState.setCreateTime(new Date());
+
             deviceStateDao.saveDeviceState(deviceState);
 
-            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
-            System.out.println("deviceStateList:" + deviceStateList.size());
+//            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
+//            //System.out.println("deviceStateList:" + deviceStateList.size());
+//
+//            if (deviceStateList != null && deviceStateList.size() > 0) {
+//                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, schoolCode);
+//                //System.out.println(" isUpload:" + isUpload);
+//                if (isUpload != 0) {
+//                    deviceStateDao.updateDeviceStateList(deviceStateList);
+//                }
+//            }
 
-            if (deviceStateList != null && deviceStateList.size() > 0) {
-                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, schoolCode);
-                System.out.println(" isUpload:" + isUpload);
-                if (isUpload != 0) {
-                    deviceStateDao.updateDeviceStateList(deviceStateList);
-                }
-            }
-
-            System.out.println(">> 设备状态改变,保存设备状态信息... " + deviceState);
+            System.out.println(">> 设备状态改变,保存设备状态信息" + deviceState);
         }
     }
 

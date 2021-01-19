@@ -6,10 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	namespace="com.allimu.mastercontroller.dao.DeviceBindDetailInfoDao">
 	<!-- <cache type="com.allimu.mastercontroller.jedis.tool.RedisCache"
 		eviction="FIFO" size="512" readOnly="true" /> -->
-	
 	<select id="getDeviceBindDetailInfoByFactorys" resultType="DeviceBindDetailInfo">
 		select * from device_bind_detail_info where sn=#{sn} and address=#{address} and
-		endpoint =#{endpoint} and equipment_code is not null
+		endpoint =#{endpoint} /*and equipment_code is not null*/
 	</select>
 	
 	<insert id="saveDeviceBindDetailInfo" useGeneratedKeys="true"

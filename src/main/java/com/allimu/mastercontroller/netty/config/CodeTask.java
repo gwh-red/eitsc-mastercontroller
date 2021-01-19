@@ -41,6 +41,8 @@ public class CodeTask {
     @Autowired
     private ElectricityConsumptionDao electricityConsumptionDao;
     @Autowired
+    private DeviceInfraredInfoDao deviceInfraredInfoDao;
+    @Autowired
     private EnvironmentalDataDao environmentalDataDao;
     @Autowired
     private DeviceBindDetailInfoDao deviceBindDetailInfoDao;
@@ -59,9 +61,9 @@ public class CodeTask {
     /*    int i = 0;*/
 
     /**
-     * * 定时任务获取网关设备
+     * * 定时任务获取网关
      */
-    @Scheduled(cron = "0/8 * * * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     public void getEquipBySchoolCode() {
         String str = remoteService.getWgEquipBySchoolCode(schoolCode);
         JSONObject jsonObject = JSONObject.parseObject(str);
@@ -105,7 +107,6 @@ public class CodeTask {
         List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
         //获取未上传到云端的耗电量信息
         List<ElectricityConsumption> electricityConsumptionList = electricityConsumptionDao.getElectricityConsumption(schoolCode);
-
         //获取未上传到云端的环境数据
         List<EnvironmentalData> environmentalDataList = environmentalDataDao.getEnvironmentalData(schoolCode);
 
@@ -334,7 +335,7 @@ public class CodeTask {
     private void jkCodeToInstructionCode(List<JkCode> jkCodeList, List<InstructionCode> instructionCodeList) {
         Date date = new Date();
         for (JkCode jc : jkCodeList) {
-            if (date.getTime() - jc.getCreateTime().getTime() <= 1000 * 60) {
+            if (date.getTime() - jc.getCreateTime().getTime() <= 2000 * 60) {
                 Equip SnEquip = equipDao.getSnEquipByEquipmentCode(jc.getEquipmentCode());
                 if (SnEquip != null) {
                     InstructionCode instructionCode = new InstructionCode();
@@ -344,6 +345,7 @@ public class CodeTask {
                 } else {
                     DeviceBindDetailInfo ddi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByEquipmentCode(jc.getEquipmentCode());
                     if (ddi != null) {
+                        DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(ddi.getAddress(), TypeConverter.intToHexByte(AirBrandMap.getIndex(jc.getBrandName())));
                         if (ddi.getDevice() == (short) 0x0000) {
                             jc.setType("传感器");
                             if (Constant.OPEN.equals(jc.getType())) {
@@ -360,18 +362,20 @@ public class CodeTask {
                             codetype = codeReflectDao.getCodeTypeByType(jc.getType());
                         }
                         InstructionCode instructionCode = new InstructionCode();
+                        // 空调选码
                         if (codetype == (byte) 0x8c) {
                             String hexStr = null;
                             if (Constant.OPEN.equals(jc.getType())) {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), null,
+                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) dii.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             } else {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), null,
+                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) dii.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             }
+
+                            System.out.println("hexStr:" + hexStr);
                             if (hexStr != null) {
                                 byte[] data = TypeConverter.hexStrToBytes(hexStr);
-                                //System.out.println("1."+hexStr);
                                 instructionCode.setData(data);
                                 instructionCode.setData_len((byte) data.length);
                             }
@@ -383,8 +387,6 @@ public class CodeTask {
                         instructionCode.setState(jc.getValue());
                         instructionCode.setValue(jc.getValue());
                         instructionCodeList.add(instructionCode);
-                        System.out.println("2." + instructionCode);
-
                     } else {
                         System.out.println(">> 该正式指令的设备未绑定...");
                     }

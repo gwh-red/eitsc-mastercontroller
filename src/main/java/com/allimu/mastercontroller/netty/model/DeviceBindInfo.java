@@ -116,8 +116,22 @@ public class DeviceBindInfo implements Serializable {
 	public void setMark(String mark) {
 		this.mark = mark;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "DeviceBindInfo{" +
+				"id=" + id +
+				", tempId=" + tempId +
+				", schoolCode=" + schoolCode +
+				", schoolName='" + schoolName + '\'' +
+				", buildCode=" + buildCode +
+				", buildName='" + buildName + '\'' +
+				", classRoomCode=" + classRoomCode +
+				", classRoomName='" + classRoomName + '\'' +
+				", equipmentType='" + equipmentType + '\'' +
+				", isUpload=" + isUpload +
+				", mark='" + mark + '\'' +
+				", createTime=" + createTime +
+				'}';
+	}
 }

@@ -66,8 +66,15 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
                         System.out.println(sn + "    " + ctx);
                         // 设置该ChannelHandlerContext与已经登录
                         nodeCheck.put(nodeIndex, true);
+                        // 登录成功后发送指令获取红外设备
+                        getAllInfrared(sn);
+
+                        Thread.sleep(1000);
                         // 登录成功后发送指令获取该网关下的设备
                         getAllDevice(sn);
+
+
+
 
                         // 更新或保存物联网关状态
                         instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "1");
@@ -108,6 +115,17 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
         System.out.println("发送指令获取客户端" + ctx.channel().remoteAddress() + "的设备绑定信息 :" + getAllDeviceCode);
         ctx.writeAndFlush(getAllDeviceCode);
     }
+
+    //获取遥控器
+    private void getAllInfrared(String sn) {
+        ChannelHandlerContext ctx = SnMapChannelHandlerContext.getMapping(sn);
+        InstructionCode getAllDeviceCode = new InstructionCode();
+        getAllDeviceCode.setType((byte) 0xa9);
+        getAllDeviceCode.setSn(sn);
+        System.out.println("发送指令获取客户端的遥控器" + ctx.channel().remoteAddress() + "的设备绑定信息 :" + getAllDeviceCode);
+        ctx.writeAndFlush(getAllDeviceCode);
+    }
+
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {

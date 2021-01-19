@@ -2,7 +2,6 @@ package com.allimu.mastercontroller.util;
 
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,7 +35,7 @@ public class CommonUtil {
 
         Properties ps = new Properties();
 
-        try {
+       /* try {
             ps.load(new InputStreamReader(new FileInputStream("/usr/local/wangguan-common.properties"), "UTF-8"));
             schoolCode = Long.parseLong(ps.getProperty("schoolCode"));
             schoolName = ps.getProperty("schoolName");
@@ -47,9 +46,9 @@ public class CommonUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
-       /* try {
+        try {
             ps.load(new InputStreamReader(CommonUtil.class.getClassLoader().getResourceAsStream("wangguan-common.properties"), "UTF-8"));
             schoolCode = Long.parseLong(ps.getProperty("schoolCode"));
             schoolName = ps.getProperty("schoolName");
@@ -61,7 +60,7 @@ public class CommonUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 

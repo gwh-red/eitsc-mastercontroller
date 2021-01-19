@@ -3,6 +3,7 @@ package com.allimu.mastercontroller.netty.code;
 
 import com.allimu.mastercontroller.netty.config.ChannelHandlerContextMapSn;
 import com.allimu.mastercontroller.netty.model.DeviceBindDetailInfo;
+import com.allimu.mastercontroller.netty.model.DeviceInfraredInfo;
 import com.allimu.mastercontroller.netty.model.Message;
 import com.allimu.mastercontroller.netty.model.RedCodeRes;
 import com.allimu.mastercontroller.util.CommonUtil;
@@ -76,8 +77,33 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
             getError(message, in);
         } else if (tag == (byte) 0x71) {
             getRedCodeRes(message, in);
+        } else if (tag == (byte) 0x73) {// 遥控器
+            getIngraredInfo(message, in);
         }
     }
+
+    private void getIngraredInfo(Message message, ByteBuf in) {
+        DeviceInfraredInfo deviceInfraredInfo = new DeviceInfraredInfo();
+        // read address
+        deviceInfraredInfo.setAddress(in.readShortLE());
+        // read endpoint
+        deviceInfraredInfo.setEndpoint(in.readByte());
+        // Device_Type
+        deviceInfraredInfo.setDeviceType(in.readShortLE());
+        //Remote_Type
+        deviceInfraredInfo.setRemoteType(in.readShortLE());
+        // Cols
+        deviceInfraredInfo.setCols(in.readShortLE());
+        //Rows
+        deviceInfraredInfo.setRows(in.readByte());
+        //NameLen
+        deviceInfraredInfo.setNameLen(in.readByte());
+        //Name
+        deviceInfraredInfo.setName(TypeConverter.byteBufToHexString(in.readBytes(TypeConverter.byteToHexInt(deviceInfraredInfo.getNameLen()))));
+        //System.out.println("deviceInfraredInfo:" + deviceInfraredInfo);
+        message.setObject(deviceInfraredInfo);
+    }
+
 
     private void getRedCodeRes(Message message, ByteBuf in) {
         RedCodeRes redCodeRes = new RedCodeRes();
@@ -112,7 +138,6 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         deviceBindDetailInfo.setState(in.readByte());
         // read ieee
         deviceBindDetailInfo.setIeee(in.readLong());
-
         // read sn
         deviceBindDetailInfo.setSn(TypeConverter.byteBufToHexString(in.readBytes(in.readByte())));
         // set isUpload
@@ -121,7 +146,6 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         // set schoolcode
         deviceBindDetailInfo.setSchoolCode(schoolCode);
         message.setObject(deviceBindDetailInfo);
-
     }
 
     private void reciveDeviceState(Message message, ByteBuf in) {
@@ -161,7 +185,6 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         } else if (dataType == (byte) 0x23) {
             message.setValue((in.readShortLE() & 0xffff) / 1f);
         }
-//		System.out.println("环境状态解码中");
     }
 
     // 电箱或者移动插座耗电量解码

@@ -18,4 +18,6 @@ public interface DeviceService {
 
     // 异常处理，如果网关断线，设置全部网关底下的设备为离线状态
     public void exceptionHandling(String sn);
+
+    public void saveDeviceInfraredInfo(Message message);
 }
