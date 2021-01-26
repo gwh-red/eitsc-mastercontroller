@@ -74,8 +74,6 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         } else if (type == (byte) 0xa9) {// 获取红外控制器
             getAllInfrared(sendBuf, req);
         }
-
-        System.out.println("-1");
     }
 
     private void setInterval(ByteBuf sendBuf, InstructionCode req) {

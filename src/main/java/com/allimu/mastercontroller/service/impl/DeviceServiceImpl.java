@@ -44,6 +44,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     private Long schoolCode = CommonUtil.schoolCode;
 
+    /**
+     * 保存红外的遥控器
+     *
+     * @param message
+     */
     @Override
     public void saveDeviceInfraredInfo(Message message) {
 
@@ -151,6 +156,7 @@ public class DeviceServiceImpl implements DeviceService {
     public void saveEnvironmentalData(Message message) {
         if (message != null) {
             String enviromentType = codeReflectDao.getEnviromentType(message.getClusterId());
+            System.out.println("enviromentType" + enviromentType);
             if (!Constant.ZHINENGCHAZUOGONGLV.equals(enviromentType)
                     && !Constant.CHUANGLIANWEIZHI.equals(enviromentType)) {
                 Equip wgEquip = equipDao.getSnEquipByParams(message.getSn(), schoolCode);
@@ -220,7 +226,8 @@ public class DeviceServiceImpl implements DeviceService {
                 .getDeviceBindDetailInfoByFactorys(message.getSn(), message.getAddress(), message.getEndpoint());
         System.out.println("saveDeviceTrueState:" + message);
         if (deviceBindDetailInfo != null && deviceBindDetailInfo.getEquipmentCode() != null) {
-
+            // deviceBindDetailInfo.getDevice() == 262 || deviceBindDetailInfo.getDevice() == 817
+            // deviceBindDetailInfo.getDevice() == 770 || deviceBindDetailInfo.getDevice() == 816
             deviceBindDetailInfo.setState(message.getState());
             buildDeviceState(deviceBindDetailInfo);
         } else {
@@ -256,8 +263,6 @@ public class DeviceServiceImpl implements DeviceService {
                 for (DeviceState deviceState : deviceStateList) {
                     deviceStateDao.saveDeviceState(deviceState);
                 }
-                // 报错
-                //deviceStateDao.saveDeviceStateList(deviceStateList);
             }
 
         } else {
@@ -289,16 +294,14 @@ public class DeviceServiceImpl implements DeviceService {
 
             deviceStateDao.saveDeviceState(deviceState);
 
-//            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
-//            //System.out.println("deviceStateList:" + deviceStateList.size());
-//
-//            if (deviceStateList != null && deviceStateList.size() > 0) {
-//                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, schoolCode);
-//                //System.out.println(" isUpload:" + isUpload);
-//                if (isUpload != 0) {
-//                    deviceStateDao.updateDeviceStateList(deviceStateList);
-//                }
-//            }
+            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
+
+            if (deviceStateList != null && deviceStateList.size() > 0) {
+                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, schoolCode);
+                if (isUpload != 0) {
+                    deviceStateDao.updateDeviceStateList(deviceStateList);
+                }
+            }
 
             System.out.println(">> 设备状态改变,保存设备状态信息" + deviceState);
         }
