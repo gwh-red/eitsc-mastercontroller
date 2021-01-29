@@ -56,7 +56,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         deviceInfraredInfo.setCreateTime(new Date());
         deviceInfraredInfo.setSn(message.getSn());
-        DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(deviceInfraredInfo.getAddress(), deviceInfraredInfo.getRows());
+        DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(deviceInfraredInfo.getAddress(), deviceInfraredInfo.getEndpoint(), deviceInfraredInfo.getCols(), deviceInfraredInfo.getRows());
         if (dii == null) {
             deviceInfraredInfoDao.saveDerviceInfraredInfo(deviceInfraredInfo);
         } else {
@@ -88,18 +88,10 @@ public class DeviceServiceImpl implements DeviceService {
         }
         System.out.println(">> 已连接网关的设备信息 >>" + deviceBindDetailInfo);
 
-        DeviceBindDetailInfo dbdi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByIeee(deviceBindDetailInfo.getIeee(),
-                deviceBindDetailInfo.getEndpoint());
 
-        if (dbdi == null) {
-            deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
-
-            buildDeviceBindInfo(deviceBindDetailInfo);
-        } else {
-            // 更新设备连接信息
-            deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
-        }
-       /* if (deviceBindDetailInfo.getDevice() != (short) 0x0006) {
+        if (deviceBindDetailInfo.getDevice() != (short) 0x0006) {
+            DeviceBindDetailInfo dbdi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByIeee(deviceBindDetailInfo.getIeee(),
+                    deviceBindDetailInfo.getEndpoint());
             if (dbdi == null) {
                 deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
 
@@ -107,27 +99,45 @@ public class DeviceServiceImpl implements DeviceService {
             } else {
                 // 更新设备连接信息
                 deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
-        } else {
-            //查询有哪些红外
-            int readDeviceCount = instructionCodeRemoteService.getReadDeviceCount(deviceBindDetailInfo.getSchoolCode(),
-                    deviceBindDetailInfo.getBuildCode(), deviceBindDetailInfo.getClassRoomCode());
+            }
 
-            //根据设备ieee地址和端点地址查询设备连接信息
-            List<DeviceBindDetailInfo> readDeviceList = deviceBindDetailInfoDao.getDeviceBindDetailInfoListByIeee(
-                    deviceBindDetailInfo.getIeee(), deviceBindDetailInfo.getEndpoint());
-            //这个地方逻辑有点问题
-            if (readDeviceCount != readDeviceList.size()) {
-                for (int i = 0; i < readDeviceCount - readDeviceList.size(); i++) {
-                    if (dbdi == null) {
-                        DeviceBindDetailInfo dbdiObj = deviceBindDetailInfo.clone();
-                        deviceBindDetailInfoDao.saveDeviceBindDetailInfo(dbdiObj);
-                        buildDeviceBindInfo(dbdiObj);
+        } else {
+            // 根据短地址端点地址查询红外控制
+            List<DeviceBindDetailInfo> deviceBindDetailInfoListByIeee = deviceBindDetailInfoDao.getDeviceBindDetailInfoListByIeee(deviceBindDetailInfo.getSn(), deviceBindDetailInfo.getIeee(),
+                    deviceBindDetailInfo.getEndpoint());
+
+            //根据短地址端点地址查询红外控制器的遥控器
+            List<DeviceInfraredInfo> deviceInfraredInfoList = deviceInfraredInfoDao.getDeviceInfraredInfo(deviceBindDetailInfo.getAddress(), deviceBindDetailInfo.getEndpoint());
+            // 查看红外是否绑定设备
+            if (deviceInfraredInfoList != null) {
+                //如果红外设备一条都没
+                if (deviceBindDetailInfoListByIeee == null) {
+                    for (int i = 0; i < deviceInfraredInfoList.size(); i++) {
+                        deviceBindDetailInfo.setCols(deviceInfraredInfoList.get(i).getCols());
+                        deviceBindDetailInfo.setRows(deviceInfraredInfoList.get(i).getRows());
+                        deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
+                        buildDeviceBindInfo(deviceBindDetailInfo);
+                    }
+                } else {
+                    for (int i = 0; i < deviceInfraredInfoList.size(); i++) {
+                        DeviceBindDetailInfo deviceBindDetailInfoByClos = deviceBindDetailInfoDao.getDeviceBindDetailInfoByClos(deviceInfraredInfoList.get(i).getAddress(), deviceInfraredInfoList.get(i).getEndpoint(), deviceInfraredInfoList.get(i).getCols(), deviceInfraredInfoList.get(i).getRows());
+                        if (deviceBindDetailInfoByClos != null) {
+                            deviceBindDetailInfoByClos.setCols(deviceInfraredInfoList.get(i).getCols());
+                            deviceBindDetailInfoByClos.setRows(deviceInfraredInfoList.get(i).getRows());
+                            deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
+                        } else {
+                            deviceBindDetailInfo.setCols(deviceInfraredInfoList.get(i).getCols());
+                            deviceBindDetailInfo.setRows(deviceInfraredInfoList.get(i).getRows());
+                            deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
+                            buildDeviceBindInfo(deviceBindDetailInfo);
+                        }
                     }
                 }
-            } else if (readDeviceCount == readDeviceList.size()) { // 如果相等，是发生了断网重连
+            } else {
+                System.out.println("红外暂无绑定遥控器！");
             }
-        }*/
 
+        }
     }
 
     private void buildDeviceBindInfo(DeviceBindDetailInfo dbdi) {
@@ -156,7 +166,7 @@ public class DeviceServiceImpl implements DeviceService {
     public void saveEnvironmentalData(Message message) {
         if (message != null) {
             String enviromentType = codeReflectDao.getEnviromentType(message.getClusterId());
-            System.out.println("enviromentType" + enviromentType);
+            System.out.println("enviromentType:" + enviromentType);
             if (!Constant.ZHINENGCHAZUOGONGLV.equals(enviromentType)
                     && !Constant.CHUANGLIANWEIZHI.equals(enviromentType)) {
                 Equip wgEquip = equipDao.getSnEquipByParams(message.getSn(), schoolCode);
@@ -222,14 +232,19 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     @Override
     public void saveDeviceTrueState(Message message) {
-        DeviceBindDetailInfo deviceBindDetailInfo = deviceBindDetailInfoDao
-                .getDeviceBindDetailInfoByFactorys(message.getSn(), message.getAddress(), message.getEndpoint());
+        List<DeviceBindDetailInfo> deviceBindDetailInfoByList = deviceBindDetailInfoDao
+                .getDeviceBindDetailInfoByList(message.getSn(), message.getAddress(), message.getEndpoint());
         System.out.println("saveDeviceTrueState:" + message);
-        if (deviceBindDetailInfo != null && deviceBindDetailInfo.getEquipmentCode() != null) {
-            // deviceBindDetailInfo.getDevice() == 262 || deviceBindDetailInfo.getDevice() == 817
-            // deviceBindDetailInfo.getDevice() == 770 || deviceBindDetailInfo.getDevice() == 816
-            deviceBindDetailInfo.setState(message.getState());
-            buildDeviceState(deviceBindDetailInfo);
+        if (deviceBindDetailInfoByList != null) {
+            for (int i = 0; i < deviceBindDetailInfoByList.size(); i++) {
+                if (deviceBindDetailInfoByList.get(i).getEquipmentCode() != null) {
+                    deviceBindDetailInfoByList.get(i).setState(message.getState());
+                    buildDeviceState(deviceBindDetailInfoByList.get(i));
+                } else {
+                    System.out.println(">> 该设备未定义,设备状态数据抛弃...");
+                }
+            }
+
         } else {
             System.out.println(">> 该设备未定义,设备状态数据抛弃...");
         }

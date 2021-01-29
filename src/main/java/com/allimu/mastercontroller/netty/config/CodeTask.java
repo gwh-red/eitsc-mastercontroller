@@ -345,7 +345,7 @@ public class CodeTask {
                 } else {
                     DeviceBindDetailInfo ddi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByEquipmentCode(jc.getEquipmentCode());
                     if (ddi != null) {
-                        DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(ddi.getAddress(), TypeConverter.intToHexByte(AirBrandMap.getIndex(jc.getBrandName())));
+                        //DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(ddi.getAddress(), ddi.getEndpoint(), ddi.getCols(), TypeConverter.intToHexByte(AirBrandMap.getIndex(jc.getBrandName())));
                         if (ddi.getDevice() == (short) 0x0000) {
                             jc.setType("传感器");
                             if (Constant.OPEN.equals(jc.getType())) {
@@ -366,10 +366,10 @@ public class CodeTask {
                         if (codetype == (byte) 0x8c) {
                             String hexStr = null;
                             if (Constant.OPEN.equals(jc.getType())) {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) dii.getCols(),
+                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             } else {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) dii.getCols(),
+                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             }
 

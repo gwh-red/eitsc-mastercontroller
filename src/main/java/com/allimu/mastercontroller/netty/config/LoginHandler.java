@@ -74,8 +74,6 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
                         getAllDevice(sn);
 
 
-
-
                         // 更新或保存物联网关状态
                         instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "1");
                     }

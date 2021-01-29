@@ -38,7 +38,12 @@
 
     <select id="getDeviceInfraredInfoByAddress"
             resultType="DeviceInfraredInfo">
-        select * from device_infrared_info where address=#{address} and rows=#{rows}
+        select * from device_infrared_info where address=#{address} and rows=#{rows} and endpoint=#{endpoint} and cols=#{cols}
 
+    </select>
+
+    <select id="getDeviceInfraredInfo"
+            resultType="DeviceInfraredInfo">
+        select * from device_infrared_info where address=#{address} and endpoint=#{endpoint}
     </select>
 </mapper>

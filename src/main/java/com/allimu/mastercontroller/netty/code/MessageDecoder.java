@@ -82,6 +82,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         }
     }
 
+    // 遥控器
     private void getIngraredInfo(Message message, ByteBuf in) {
         DeviceInfraredInfo deviceInfraredInfo = new DeviceInfraredInfo();
         // read address
@@ -104,7 +105,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setObject(deviceInfraredInfo);
     }
 
-
+    //红外控制-应答数据结构
     private void getRedCodeRes(Message message, ByteBuf in) {
         RedCodeRes redCodeRes = new RedCodeRes();
         // read address
@@ -120,6 +121,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setObject(redCodeRes);
     }
 
+    //获取当前连接的设备-应答数据结构
     private void reciveAllDevice(Message message, ByteBuf in) {
         DeviceBindDetailInfo deviceBindDetailInfo = new DeviceBindDetailInfo();
         // read address
@@ -148,6 +150,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setObject(deviceBindDetailInfo);
     }
 
+    //获取指定设备的开关状态 -应答数据结构
     private void reciveDeviceState(Message message, ByteBuf in) {
         // read address
         message.setAddress(in.readShortLE());
@@ -199,6 +202,9 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setValue((in.readIntLE() & 0xffffffff) / 100f);
     }
 
+    //区间电量返回协议
+    //主机主动上传区间电量数据，无请求数据。插座打开和关闭期间产生的用电电量。
+    //返回数据格式：
     private void reciveAutoElectric(Message message, ByteBuf in) {
         // read address
         message.setAddress(in.readShortLE());
@@ -208,10 +214,12 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setValue((in.readIntLE() & 0xffffffff) / 100f);
     }
 
+    //网关心跳
     private void heartBeat(Message message, ByteBuf in) {
         message.setResult(in.readByte());
     }
 
+    //查询网关时间
     private void reciveGatewayDatetime(Message message, ByteBuf in) {
         // read min
         message.setMin(in.readByte());
@@ -225,11 +233,13 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setYear((in.readShortLE() & 0xffff));
     }
 
+    //同步网关时间
     private void synresult(Message message, ByteBuf in) {
         // read result
         message.setResult(in.readByte());
     }
 
+    //网关崩溃自动返回信息
     private void getError(Message message, ByteBuf in) {
         // read result
         message.setResult(in.readByte());
