@@ -250,4 +250,38 @@ public class TypeConverter {
         b[3] = shortb[1];
         return b;
     }
+
+    /**
+     * spring转spring数组
+     *
+     * @param str
+     * @return
+     */
+    public static String[] strToStrs(String str) {
+        if (str != null && str.length() > 0) {
+            String[] arr = str.split(","); // 用,分割
+            return arr;
+        }
+        return null;
+
+    }
+
+    /**
+     * spring转Long数组
+     *
+     * @param str
+     * @return
+     */
+    public static Long[] strToLongs(String str) {
+        String[] strs = strToStrs(str);
+        if (strs != null && strs.length > 0) {
+            Long[] longs = new Long[strs.length];
+            for (int i = 0; i < strs.length; i++) {
+                longs[i] = Long.parseLong(strs[i]);
+            }
+            return longs;
+        }
+        return null;
+    }
+
 }

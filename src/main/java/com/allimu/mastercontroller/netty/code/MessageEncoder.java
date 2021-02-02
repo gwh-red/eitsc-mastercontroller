@@ -75,7 +75,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
             getAllInfrared(sendBuf, req);
         }
     }
-
+    //设置设备数据上传间隔
     private void setInterval(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -94,7 +94,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getValue());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
     }
-
+    //添加设备
     private void addDevice(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -103,7 +103,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //网关心跳
     private void sendHeartBeat(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0);
         sendBuf.writeByte(req.getType());
@@ -149,7 +149,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
         System.out.println("MessageEncoder.setDeviceState()：" + sendBuf.readableBytes());
     }
-
+    //获取指定设备的开关状态
     private void getOneDevice(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -165,7 +165,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //更改指定设备名
     private void changeDeviceName(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -180,7 +180,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //插座自动断电功率设置
     private void setPowerOutage(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -197,7 +197,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //查询插座自动断电功率
     private void getPowerOutage(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -214,6 +214,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
 
+    //设置窗帘位置或音乐音量
     private void setCurtainsOrVolume(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -230,7 +231,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //查询窗帘位置或音乐音量
     private void getCurtainsOrVolume(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -246,7 +247,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //查询网关时间
     private void getGatewayDatetime(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -254,7 +255,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getType());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
     }
-
+    //同步网关时间
     private void setGatewayDatetime(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -270,7 +271,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //区间电量查询
     private void getElectric(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -288,7 +289,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //电量清零
     private void clearElectric(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));
@@ -306,7 +307,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
     }
-
+    //登陆、修改密码
     private void sendLoginInfo(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeByte(req.getType());
         sendBuf.writeByte(0);
@@ -317,7 +318,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeInt(req.getPort());
         sendBuf.setByte(1, (byte) (sendBuf.readableBytes() - 2));
     }
-
+    //红外控制
     private void sendRedCode(ByteBuf sendBuf, InstructionCode req) {
         sendBuf.writeShort(0x0);
         sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getSn()));

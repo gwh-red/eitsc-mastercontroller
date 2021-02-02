@@ -1,5 +1,6 @@
 package com.allimu.mastercontroller.util;
 
+import com.allimu.mastercontroller.netty.code.TypeConverter;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -19,6 +20,14 @@ public class CommonUtil {
      * 学校名称
      */
     public static String schoolName;
+    /**
+     * 学校编码
+     */
+    //public static Long[] schoolCodes;
+    /**
+     * 学校名称
+     */
+   // public static String[] schoolNames;
     /**
      * TCP服务端监听端口
      */
@@ -51,6 +60,8 @@ public class CommonUtil {
 
         try {
             ps.load(new InputStreamReader(CommonUtil.class.getClassLoader().getResourceAsStream("wangguan-common.properties"), "UTF-8"));
+            //schoolCodes = TypeConverter.strToLongs(ps.getProperty("schoolCode"));
+          //  schoolNames = TypeConverter.strToStrs(ps.getProperty("schoolName"));
             schoolCode = Long.parseLong(ps.getProperty("schoolCode"));
             schoolName = ps.getProperty("schoolName");
             tcpServerPort = Integer.parseInt(ps.getProperty("tcpServerPort"));
