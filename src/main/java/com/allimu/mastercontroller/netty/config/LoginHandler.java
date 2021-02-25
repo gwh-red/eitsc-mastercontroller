@@ -5,7 +5,6 @@ import com.allimu.mastercontroller.netty.model.InstructionCode;
 import com.allimu.mastercontroller.netty.model.Message;
 import com.allimu.mastercontroller.remote.service.InstructionCodeRemoteService;
 import com.allimu.mastercontroller.service.DeviceService;
-import com.allimu.mastercontroller.util.CommonUtil;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -33,7 +32,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
     @Autowired
     private InstructionCodeRemoteService instructionCodeRemoteService;
 
-    private Long schoolCode = CommonUtil.schoolCode;
+    //private Long schoolCode = CommonUtil.schoolCode;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) throws Exception {
@@ -64,6 +63,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
                         // 设置ChannelHandlerContext与sn的映射
                         SnMapChannelHandlerContext.setMapping(sn, ctx);
                         System.out.println(sn + "    " + ctx);
+                        System.out.println(sn + "    " + SnMapContextSchoolCode.getMapping(sn));
                         // 设置该ChannelHandlerContext与已经登录
                         nodeCheck.put(nodeIndex, true);
                         // 登录成功后发送指令获取红外设备
@@ -75,7 +75,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
 
 
                         // 更新或保存物联网关状态
-                        instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "1");
+                        instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "1");
                     }
                 }
             }
@@ -137,7 +137,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
 
         // 更新或保存物联网关状态
         String sn = ChannelHandlerContextMapSn.getMapping(ctx.channel().remoteAddress().toString());
-        instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "2");
+        instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "2");
 
         // 断网处理
         deviceService
@@ -176,7 +176,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
 
         // 更新或保存物联网关状态
         String sn = ChannelHandlerContextMapSn.getMapping(ctx.channel().remoteAddress().toString());
-        instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "2");
+        instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "2");
 
         // 断网处理
         deviceService
@@ -204,7 +204,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
 
         // 更新或保存物联网关状态
         String sn = ChannelHandlerContextMapSn.getMapping(ctx.channel().remoteAddress().toString());
-        instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "2");
+        instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "2");
 
         // 断网处理
         deviceService
@@ -227,7 +227,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
             if (state == IdleState.READER_IDLE) {
                 // 更新或保存物联网关状态
                 String sn = ChannelHandlerContextMapSn.getMapping(ctx.channel().remoteAddress().toString());
-                instructionCodeRemoteService.saveOrUpdateWgState(schoolCode, sn, "2");
+                instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "2");
 
                 // 断网处理
                 deviceService

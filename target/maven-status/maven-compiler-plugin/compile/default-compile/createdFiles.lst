@@ -58,6 +58,7 @@ com\allimu\mastercontroller\dao\DeviceBindDetailInfoDao.class
 com\allimu\mastercontroller\infrared\c\C.class
 com\allimu\mastercontroller\netty\code\EnvironmentUnit.class
 com\allimu\mastercontroller\netty\code\LoginMessageDecoder.class
+com\allimu\mastercontroller\netty\config\SnMapContextSchoolCode.class
 com\allimu\mastercontroller\netty\config\SaveEquipService.class
 com\allimu\mastercontroller\netty\config\CodeTask$1.class
 com\allimu\mastercontroller\infrared\value\Value$LIGHT.class

@@ -3,10 +3,10 @@ package com.allimu.mastercontroller.service.impl;
 import com.allimu.mastercontroller.dao.*;
 import com.allimu.mastercontroller.netty.code.Constant;
 import com.allimu.mastercontroller.netty.code.EnvironmentUnit;
+import com.allimu.mastercontroller.netty.config.SnMapContextSchoolCode;
 import com.allimu.mastercontroller.netty.model.*;
 import com.allimu.mastercontroller.remote.service.InstructionCodeRemoteService;
 import com.allimu.mastercontroller.service.DeviceService;
-import com.allimu.mastercontroller.util.CommonUtil;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class DeviceServiceImpl implements DeviceService {
     InstructionCodeRemoteService instructionCodeRemoteService;
 
 
-    private Long schoolCode = CommonUtil.schoolCode;
+    //private Long schoolCode = CommonUtil.schoolCode;
 
     /**
      * 保存红外的遥控器
@@ -166,10 +166,9 @@ public class DeviceServiceImpl implements DeviceService {
     public void saveEnvironmentalData(Message message) {
         if (message != null) {
             String enviromentType = codeReflectDao.getEnviromentType(message.getClusterId());
-            System.out.println("enviromentType:" + enviromentType);
             if (!Constant.ZHINENGCHAZUOGONGLV.equals(enviromentType)
                     && !Constant.CHUANGLIANWEIZHI.equals(enviromentType)) {
-                Equip wgEquip = equipDao.getSnEquipByParams(message.getSn(), schoolCode);
+                Equip wgEquip = equipDao.getSnEquipByParams(message.getSn(), SnMapContextSchoolCode.getMapping(message.getSn()));
                 if (wgEquip != null) {
                     EnvironmentalData ed = new EnvironmentalData();
                     ed.setSchoolCode(wgEquip.getSchoolCode());
@@ -187,7 +186,7 @@ public class DeviceServiceImpl implements DeviceService {
                     } else {
                         ed.setValue(message.getValue());
                     }
-                    ed.setSchoolCode(schoolCode);
+                    ed.setSchoolCode(SnMapContextSchoolCode.getMapping(message.getSn()));
                     ed.setIsUpload(false);
                     ed.setCreateTime(new Date());
                     environmentalDataDao.saveEnvironmentalData(ed);
@@ -309,10 +308,10 @@ public class DeviceServiceImpl implements DeviceService {
 
             deviceStateDao.saveDeviceState(deviceState);
 
-            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
+            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(SnMapContextSchoolCode.getMapping(dbdi.getSn()));
 
             if (deviceStateList != null && deviceStateList.size() > 0) {
-                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, schoolCode);
+                isUpload = instructionCodeRemoteService.saveDeviceState(deviceStateList, SnMapContextSchoolCode.getMapping(dbdi.getSn()));
                 if (isUpload != 0) {
                     deviceStateDao.updateDeviceStateList(deviceStateList);
                 }

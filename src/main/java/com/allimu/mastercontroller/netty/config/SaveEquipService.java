@@ -30,27 +30,32 @@ public class SaveEquipService implements ApplicationListener<ContextRefreshedEve
     @Autowired
     private EquipDao equipDao;
 
+    private Long[] schoolCodes = CommonUtil.schoolCodes;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             System.out.println(" >> 项目启动时同步一次网关设备");
 
-            String str = remoteService.getWgEquipBySchoolCode(CommonUtil.schoolCode);
+            for (int i = 0; i < schoolCodes.length; i++) {
 
-            JSONObject jsonObject = JSONObject.parseObject(str);
+                String str = remoteService.getWgEquipBySchoolCode(schoolCodes[i]);
+                JSONObject jsonObject = JSONObject.parseObject(str);
 
-            System.out.println(" >> 查看str：" + jsonObject);
+                System.out.println(" >> 查看str：" + jsonObject);
 
-            String res = jsonObject.getString("data");
-            if (res != null && !res.equals("[]")) {
-                List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {
-                });
-                for (Equip snEquip : snEquipList) {
-                    //查询获取到的信息时候已存在
-                    if (equipDao.getSnEquipBySn(snEquip.getSn()) == null) {
-                        //不存在就新增
-                        snEquip.setCreateTime(new Date());
-                        equipDao.saveSnEquip(snEquip);
+                String res = jsonObject.getString("data");
+                if (res != null && !res.equals("[]")) {
+                    List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {
+                    });
+                    for (Equip snEquip : snEquipList) {
+                        SnMapContextSchoolCode.setMapping(snEquip.getSn(), schoolCodes[i]);
+                        //查询获取到的信息时候已存在
+                        if (equipDao.getSnEquipBySn(snEquip.getSn()) == null) {
+                            //不存在就新增
+                            snEquip.setCreateTime(new Date());
+                            equipDao.saveSnEquip(snEquip);
+                        }
                     }
                 }
             }

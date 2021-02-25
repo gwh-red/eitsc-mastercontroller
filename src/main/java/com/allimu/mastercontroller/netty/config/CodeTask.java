@@ -55,9 +55,9 @@ public class CodeTask {
 
     private ChannelHandlerContext ctx3;
 
-    private Long schoolCode = CommonUtil.schoolCode;
-
     private Long delay = CommonUtil.delay;
+
+    private Long[] schoolCodes = CommonUtil.schoolCodes;
     /*    int i = 0;*/
 
     /**
@@ -65,20 +65,23 @@ public class CodeTask {
      */
     @Scheduled(cron = "0/5 * * * * ?")
     public void getEquipBySchoolCode() {
-        String str = remoteService.getWgEquipBySchoolCode(schoolCode);
-        JSONObject jsonObject = JSONObject.parseObject(str);
-        String res = jsonObject.getString("data");
-        if (res != null && !res.equals("[]")) {
-            List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {
-            });
-            for (Equip snEquip : snEquipList) {
-                //LoginHandler.getAllDevice(snEquip.getSn());
-                if (equipDao.getSnEquipBySn(snEquip.getSn()) == null) {
-                    snEquip.setCreateTime(new Date());
-                    equipDao.saveSnEquip(snEquip);
+
+        for (int i = 0; i < schoolCodes.length; i++) {
+            String str = remoteService.getWgEquipBySchoolCode(schoolCodes[i]);
+            JSONObject jsonObject = JSONObject.parseObject(str);
+            String res = jsonObject.getString("data");
+            if (res != null && !res.equals("[]")) {
+                List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {
+                });
+                for (Equip snEquip : snEquipList) {
+                    if (equipDao.getSnEquipBySn(snEquip.getSn()) == null) {
+                        snEquip.setCreateTime(new Date());
+                        equipDao.saveSnEquip(snEquip);
+                    }
                 }
             }
         }
+
     }
 
 /*
@@ -101,37 +104,38 @@ public class CodeTask {
     @Scheduled(cron = "*/5 * * * * ?")
     public void svaeToCloud() {
         int isUpload = 0;
-        // 获取未上传到云端的设备绑定信息
-        List<DeviceBindInfo> deviceBindInfoList = deviceBindInfoDao.getDeviceBindInfo(schoolCode);
-        //获取未上传到云端的设备状态信息
-        List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCode);
-        //获取未上传到云端的耗电量信息
-        List<ElectricityConsumption> electricityConsumptionList = electricityConsumptionDao.getElectricityConsumption(schoolCode);
-        //获取未上传到云端的环境数据
-        List<EnvironmentalData> environmentalDataList = environmentalDataDao.getEnvironmentalData(schoolCode);
-
-        if (deviceBindInfoList != null && deviceBindInfoList.size() > 0) {
-            isUpload = remoteService.saveDeviceBindInfoByWg(deviceBindInfoList, schoolCode);
-            if (isUpload != 0) {
-                deviceBindInfoDao.updateDeviceBindInfoList(deviceBindInfoList);
+        for (int i = 0; i < schoolCodes.length; i++) {
+            // 获取未上传到云端的设备绑定信息
+            List<DeviceBindInfo> deviceBindInfoList = deviceBindInfoDao.getDeviceBindInfo(schoolCodes[i]);
+            //获取未上传到云端的设备状态信息
+            List<DeviceState> deviceStateList = deviceStateDao.getDeviceState(schoolCodes[i]);
+            //获取未上传到云端的耗电量信息
+            List<ElectricityConsumption> electricityConsumptionList = electricityConsumptionDao.getElectricityConsumption(schoolCodes[i]);
+            //获取未上传到云端的环境数据
+            List<EnvironmentalData> environmentalDataList = environmentalDataDao.getEnvironmentalData(schoolCodes[i]);
+            if (deviceBindInfoList != null && deviceBindInfoList.size() > 0) {
+                isUpload = remoteService.saveDeviceBindInfoByWg(deviceBindInfoList, schoolCodes[i]);
+                if (isUpload != 0) {
+                    deviceBindInfoDao.updateDeviceBindInfoList(deviceBindInfoList);
+                }
             }
-        }
-        if (deviceStateList != null && deviceStateList.size() > 0) {
-            isUpload = remoteService.saveDeviceState(deviceStateList, schoolCode);
-            if (isUpload != 0) {
-                deviceStateDao.updateDeviceStateList(deviceStateList);
+            if (deviceStateList != null && deviceStateList.size() > 0) {
+                isUpload = remoteService.saveDeviceState(deviceStateList, schoolCodes[i]);
+                if (isUpload != 0) {
+                    deviceStateDao.updateDeviceStateList(deviceStateList);
+                }
             }
-        }
-        if (electricityConsumptionList != null && electricityConsumptionList.size() > 0) {
-            isUpload = remoteService.saveElectricityConsumption(electricityConsumptionList, schoolCode);
-            if (isUpload != 0) {
-                electricityConsumptionDao.updateElectricityConsumptionList(electricityConsumptionList);
+            if (electricityConsumptionList != null && electricityConsumptionList.size() > 0) {
+                isUpload = remoteService.saveElectricityConsumption(electricityConsumptionList, schoolCodes[i]);
+                if (isUpload != 0) {
+                    electricityConsumptionDao.updateElectricityConsumptionList(electricityConsumptionList);
+                }
             }
-        }
-        if (environmentalDataList != null && environmentalDataList.size() > 0) {
-            isUpload = remoteService.saveEnvironmentalData(environmentalDataList, schoolCode);
-            if (isUpload != 0) {
-                environmentalDataDao.updateEnvironmentalDataList(environmentalDataList);
+            if (environmentalDataList != null && environmentalDataList.size() > 0) {
+                isUpload = remoteService.saveEnvironmentalData(environmentalDataList, schoolCodes[i]);
+                if (isUpload != 0) {
+                    environmentalDataDao.updateEnvironmentalDataList(environmentalDataList);
+                }
             }
         }
 
@@ -143,38 +147,40 @@ public class CodeTask {
     @Scheduled(cron = "*/2 * * * * ?")
     public void instructionCodeRemoteService() {
         try {
-            List<TempReflect> tempReflectList = remoteService.getTempReflectByWg(schoolCode, Constant.MARK);
-            if (tempReflectList != null && tempReflectList.size() > 0) {
-                //修改Device_Bind_Detail_Info和Device_Bind_Info的信息
-                for (TempReflect tempReflect : tempReflectList) {
-                    //修改零时表Device_Bind_Detail_Info绑定信息
-                    DeviceBindDetailInfo deviceBindDetailInfo = deviceBindDetailInfoDao
-                            .getDeviceBindDetailInfoByTempId(tempReflect.getTempId());
-                    if (deviceBindDetailInfo != null) {
-                        deviceBindDetailInfo.setEquipmentCode(tempReflect.getEquipmentCode());
-                        deviceBindDetailInfo.setEquipmentName(tempReflect.getEquipmentName());
+            for (int i = 0; i < schoolCodes.length; i++) {
+                List<TempReflect> tempReflectList = remoteService.getTempReflectByWg(schoolCodes[i], Constant.MARK);
+                if (tempReflectList != null && tempReflectList.size() > 0) {
+                    //修改Device_Bind_Detail_Info和Device_Bind_Info的信息
+                    for (TempReflect tempReflect : tempReflectList) {
+                        //修改零时表Device_Bind_Detail_Info绑定信息
+                        DeviceBindDetailInfo deviceBindDetailInfo = deviceBindDetailInfoDao
+                                .getDeviceBindDetailInfoByTempId(tempReflect.getTempId());
+                        if (deviceBindDetailInfo != null) {
+                            deviceBindDetailInfo.setEquipmentCode(tempReflect.getEquipmentCode());
+                            deviceBindDetailInfo.setEquipmentName(tempReflect.getEquipmentName());
 
-                        if (tempReflect.getClassCode() != null && tempReflect.getClassName() != null) {
-                            deviceBindDetailInfo.setClassRoomCode(tempReflect.getClassCode());
-                            deviceBindDetailInfo.setClassRoomName(tempReflect.getClassName());
+                            if (tempReflect.getClassCode() != null && tempReflect.getClassName() != null) {
+                                deviceBindDetailInfo.setClassRoomCode(tempReflect.getClassCode());
+                                deviceBindDetailInfo.setClassRoomName(tempReflect.getClassName());
+                            }
+
+                            deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
+                            remoteService.updateTempReflectByWg(tempReflect);
+                        }
+                        //修改零时表Device_Bind_Info绑定信息
+                        DeviceBindInfo deviceBindInfo = deviceBindInfoDao.getDeviceBindInfoByTempId(tempReflect.getTempId());
+                        if (deviceBindInfo != null) {
+                            if (tempReflect.getClassCode() != null && tempReflect.getClassName() != null) {
+                                deviceBindInfo.setClassRoomCode(tempReflect.getClassCode());
+                                deviceBindInfo.setClassRoomName(tempReflect.getClassName());
+                            }
+                            deviceBindInfo.setTempId(tempReflect.getTempId());
+                            deviceBindInfoDao.updateDeviceBindInfoId(deviceBindInfo);
+
+                            remoteService.updateTempReflectByWg(tempReflect);
                         }
 
-                        deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
-                        remoteService.updateTempReflectByWg(tempReflect);
                     }
-                    //修改零时表Device_Bind_Info绑定信息
-                    DeviceBindInfo deviceBindInfo = deviceBindInfoDao.getDeviceBindInfoByTempId(tempReflect.getTempId());
-                    if (deviceBindInfo != null) {
-                        if (tempReflect.getClassCode() != null && tempReflect.getClassName() != null) {
-                            deviceBindInfo.setClassRoomCode(tempReflect.getClassCode());
-                            deviceBindInfo.setClassRoomName(tempReflect.getClassName());
-                        }
-                        deviceBindInfo.setTempId(tempReflect.getTempId());
-                        deviceBindInfoDao.updateDeviceBindInfoId(deviceBindInfo);
-
-                        remoteService.updateTempReflectByWg(tempReflect);
-                    }
-
                 }
             }
         } catch (Exception e) {
@@ -188,17 +194,20 @@ public class CodeTask {
      */
     @Scheduled(cron = "*/2 * * * * ?")
     public void getTestCode() {
-        List<JkTestCode> jkTestCodeList = remoteService.getJkTestCode(schoolCode);
+        for (int i = 0; i < schoolCodes.length; i++) {
 
-        if (jkTestCodeList != null && jkTestCodeList.size() > 0) {
-            List<InstructionCode> instructionCodeList = new ArrayList<InstructionCode>();
+            List<JkTestCode> jkTestCodeList = remoteService.getJkTestCode(schoolCodes[i]);
 
-            jkTestCodeToInstructionCode(jkTestCodeList, instructionCodeList);
+            if (jkTestCodeList != null && jkTestCodeList.size() > 0) {
+                List<InstructionCode> instructionCodeList = new ArrayList<InstructionCode>();
 
-            for (InstructionCode instructionCode : instructionCodeList) {
-                ctx1 = SnMapChannelHandlerContext.getMapping(instructionCode.getSn());
-                if (ctx1 != null) {
-                    ctx1.writeAndFlush(instructionCode);
+                jkTestCodeToInstructionCode(jkTestCodeList, instructionCodeList);
+
+                for (InstructionCode instructionCode : instructionCodeList) {
+                    ctx1 = SnMapChannelHandlerContext.getMapping(instructionCode.getSn());
+                    if (ctx1 != null) {
+                        ctx1.writeAndFlush(instructionCode);
+                    }
                 }
             }
         }
@@ -209,24 +218,26 @@ public class CodeTask {
      */
     @Scheduled(cron = "*/2 * * * * ?")
     public void getJkCode() {
-        List<JkCode> jkCodeList = remoteService.getJkCode(schoolCode);
-        if (jkCodeList != null && jkCodeList.size() > 0) {
-            List<InstructionCode> instructionCodeList = new ArrayList<InstructionCode>();
-            jkCodeToInstructionCode(jkCodeList, instructionCodeList);
-            for (InstructionCode instructionCode : instructionCodeList) {
-                ctx3 = SnMapChannelHandlerContext.getMapping(instructionCode.getSn());
-                if (ctx3 != null) {
-                    System.out.println("发送正式指令成功 >>" + instructionCode);
-                    ctx3.writeAndFlush(instructionCode);
-                    //System.out.println("3."+instructionCode.getData());
-                    //System.out.println("3."+instructionCode.getData_len());
-                } else {
-                    System.out.println("该网关断线");
-                }
-                try {
-                    Thread.sleep(delay);   // 休眠
-                } catch (Exception e) {
-                    e.printStackTrace();
+        for (int i = 0; i < schoolCodes.length; i++) {
+
+            List<JkCode> jkCodeList = remoteService.getJkCode(schoolCodes[i]);
+            if (jkCodeList != null && jkCodeList.size() > 0) {
+                System.out.println("jkCodeList" + jkCodeList);
+                List<InstructionCode> instructionCodeList = new ArrayList<InstructionCode>();
+                jkCodeToInstructionCode(jkCodeList, instructionCodeList);
+                for (InstructionCode instructionCode : instructionCodeList) {
+                    ctx3 = SnMapChannelHandlerContext.getMapping(instructionCode.getSn());
+                    if (ctx3 != null) {
+                        System.out.println("发送正式指令成功 >>" + instructionCode);
+                        ctx3.writeAndFlush(instructionCode);
+                    } else {
+                        System.out.println("该网关断线");
+                    }
+                    try {
+                        Thread.sleep(delay);   // 休眠
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -245,16 +256,19 @@ public class CodeTask {
      */
     @Scheduled(cron = "0 0 1/1 * * ?")
     public void electricityTask() {
-        List<DeviceBindDetailInfo> eleDeviceList = deviceBindDetailInfoDao.getEleDevice(schoolCode);
-        if (eleDeviceList != null && eleDeviceList.size() > 0)
-            for (DeviceBindDetailInfo eleDevice : eleDeviceList) {
-                ctx2 = SnMapChannelHandlerContext.getMapping(eleDevice.getSn());
-                if (ctx2 != null) {
-                    if (eleDevice.getEquipmentCode() != null) {
-                        ctx2.writeAndFlush(buildEleCode(eleDevice));
+        for (int i = 0; i < schoolCodes.length; i++) {
+
+            List<DeviceBindDetailInfo> eleDeviceList = deviceBindDetailInfoDao.getEleDevice(schoolCodes[i]);
+            if (eleDeviceList != null && eleDeviceList.size() > 0)
+                for (DeviceBindDetailInfo eleDevice : eleDeviceList) {
+                    ctx2 = SnMapChannelHandlerContext.getMapping(eleDevice.getSn());
+                    if (ctx2 != null) {
+                        if (eleDevice.getEquipmentCode() != null) {
+                            ctx2.writeAndFlush(buildEleCode(eleDevice));
+                        }
                     }
                 }
-            }
+        }
     }
 
     /**

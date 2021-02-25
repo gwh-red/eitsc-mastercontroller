@@ -2,11 +2,11 @@ package com.allimu.mastercontroller.netty.code;
 
 
 import com.allimu.mastercontroller.netty.config.ChannelHandlerContextMapSn;
+import com.allimu.mastercontroller.netty.config.SnMapContextSchoolCode;
 import com.allimu.mastercontroller.netty.model.DeviceBindDetailInfo;
 import com.allimu.mastercontroller.netty.model.DeviceInfraredInfo;
 import com.allimu.mastercontroller.netty.model.Message;
 import com.allimu.mastercontroller.netty.model.RedCodeRes;
-import com.allimu.mastercontroller.util.CommonUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -21,7 +21,6 @@ import io.netty.util.ReferenceCountUtil;
 
 public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 
-    private Long schoolCode = CommonUtil.schoolCode;
 
     public MessageDecoder() {
         super(1024 * 1024, 1, 1, 0, 0);
@@ -117,7 +116,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         // sn
         redCodeRes.setSn(TypeConverter.byteBufToHexString(in.readBytes(in.readByte())));
         // set schoolcode
-        redCodeRes.setSchoolCode(schoolCode);
+        redCodeRes.setSchoolCode(SnMapContextSchoolCode.getMapping(redCodeRes.getSn()));
         message.setObject(redCodeRes);
     }
 
@@ -146,7 +145,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 
         deviceBindDetailInfo.setIsUpload(false);
         // set schoolcode
-        deviceBindDetailInfo.setSchoolCode(schoolCode);
+        deviceBindDetailInfo.setSchoolCode(SnMapContextSchoolCode.getMapping(deviceBindDetailInfo.getSn()));
         message.setObject(deviceBindDetailInfo);
     }
 
