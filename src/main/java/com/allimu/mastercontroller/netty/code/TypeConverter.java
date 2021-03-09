@@ -39,6 +39,26 @@ public class TypeConverter {
         return res;
     }
 
+    /**
+     * 16进制字符串转byte[]
+     *
+     * @param hexString the hex string
+     * @return byte[]
+     */
+    public static byte[] hexStringToBytes(String hexString) {
+        if (hexString == null || hexString.equals("")) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByteA(hexChars[pos]) << 4 | charToByteA(hexChars[pos + 1]));
+        }
+        return d;
+    }
 
     /**
      * 字节数组转整型
@@ -205,15 +225,19 @@ public class TypeConverter {
         byte[] result = new byte[len];
         char[] chars = hexStr.toCharArray();
         for (int i = 0; i < len; i++) {
-            result[i] = (byte) (charToByte(chars[i * 2]) << 4 | charToByte(chars[i * 2 + 1]));
+            result[i] = (byte) (charToBytea(chars[i * 2]) << 4 | charToBytea(chars[i * 2 + 1]));
         }
         return result;
     }
 
-    public static byte charToByte(char c) {
+    public static byte charToBytea(char c) {
         String chars = "0123456789abcdef";
         byte b = (byte) chars.indexOf(c);
         return b;
+    }
+
+    private static byte charToByteA(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
     /**

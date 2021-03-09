@@ -18,6 +18,8 @@
             <if test="nameLen!=null">name_Len,</if>
             <if test="name!=null">name,</if>
             <if test="sn!=null">sn,</if>
+            <if test="infraredCode!=null">infrared_code,</if>
+            <if test="isInfraredCode!=null">is_infrared_code,</if>
             <if test="createTime!=null">create_time</if>
         </trim>
         values
@@ -31,6 +33,8 @@
             <if test="nameLen!=null">#{nameLen,jdbcType=TINYINT},</if>
             <if test="name!=null">#{name,jdbcType=VARCHAR},</if>
             <if test="sn!=null">#{sn,jdbcType=VARCHAR},</if>
+            <if test="infraredCode!=null">#{infraredCode,jdbcType=VARCHAR},</if>
+            <if test="isInfraredCode!=null">#{isInfraredCode,jdbcType=TINYINT},</if>
             <if test="createTime!=null">#{createTime,jdbcType=TIMESTAMP}</if>
         </trim>
     </insert>
@@ -38,12 +42,28 @@
 
     <select id="getDeviceInfraredInfoByAddress"
             resultType="DeviceInfraredInfo">
-        select * from device_infrared_info where address=#{address} and rows=#{rows} and endpoint=#{endpoint} and cols=#{cols}
+        select *
+        from device_infrared_info
+        where address = #{address}
+          and rows =#{rows}
+          and endpoint=#{endpoint}
+          and cols=#{cols}
 
     </select>
 
     <select id="getDeviceInfraredInfo"
             resultType="DeviceInfraredInfo">
-        select * from device_infrared_info where address=#{address} and endpoint=#{endpoint}
+        select *
+        from device_infrared_info
+        where address = #{address}
+          and endpoint = #{endpoint}
+    </select>
+
+    <select id="getDeviceInfraredInfoId"
+            resultType="DeviceInfraredInfo">
+        select *
+        from device_infrared_info
+        where id = #{id}
+
     </select>
 </mapper>

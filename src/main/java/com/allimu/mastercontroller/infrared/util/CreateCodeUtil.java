@@ -34,10 +34,6 @@ public class CreateCodeUtil {
         } else {
             kd.mAirCols = mAirCols;
         }
-      /*  if (mAirRows == 3) {
-            kd.mAirCols = 1;
-        }*/
-        //kd.mAirCols = 0;
         /*
          * 最重要一步，获取指令,空调的keyvalue, 定义好以上值，接着界面也需要确定按的是那个键，本程序没有界面，假设用户按了关机键
          * 而在按关机键之前，假设软件界面是显示制冷、26度、风量中、风向下
@@ -73,7 +69,7 @@ public class CreateCodeUtil {
         kd.Write(Value.AIR.TEMPADD);            // 如果想温度+1，刚执行该指令就可以了，如当前温度为26度，执行后则为27度
 
         String infraredCode = bytesToHexString(b);
-        System.out.println(infraredCode);
+        //System.out.println("infraredCode:" + infraredCode);
         return infraredCode;
     }
 

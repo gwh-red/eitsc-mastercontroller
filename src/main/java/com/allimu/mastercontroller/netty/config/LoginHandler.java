@@ -40,7 +40,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
         if (message.getType() != null) {
             String name = message.getName();
             String password = message.getPassword();
-            String sn = message.getSn();
+            String sn = message.getSn().toUpperCase();
             System.out.println("客户端" + ctx.channel().remoteAddress() + "的登录消息 ：" + message);
             // 登录验证，账号密码验证
             if (name != null && password != null && name.equals("admin")
@@ -72,7 +72,6 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
                         Thread.sleep(1000);
                         // 登录成功后发送指令获取该网关下的设备
                         getAllDevice(sn);
-
 
                         // 更新或保存物联网关状态
                         instructionCodeRemoteService.saveOrUpdateWgState(SnMapContextSchoolCode.getMapping(sn), sn, "1");

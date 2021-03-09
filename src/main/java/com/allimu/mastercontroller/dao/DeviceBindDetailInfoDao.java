@@ -8,9 +8,10 @@ import java.util.List;
 public interface DeviceBindDetailInfoDao {
     // 根据ieee和endpoint查找设备连接信息
     public DeviceBindDetailInfo getDeviceBindDetailInfoByFactorys(@Param("sn") String sn,
-                                                                        @Param("address") Short address, @Param("endpoint") Byte endpoint);
+                                                                  @Param("address") Short address, @Param("endpoint") Byte endpoint);
+
     public List<DeviceBindDetailInfo> getDeviceBindDetailInfoByList(@Param("sn") String sn,
-                                                                        @Param("address") Short address, @Param("endpoint") Byte endpoint);
+                                                                    @Param("address") Short address, @Param("endpoint") Byte endpoint);
 
 
     // 保存设备连接信息
@@ -46,8 +47,9 @@ public interface DeviceBindDetailInfoDao {
     public DeviceBindDetailInfo getDeviceBindDetailInfoByClos(@Param("address") Short address,
                                                               @Param("endpoint") Byte endpoint, @Param("cols") Short cols, @Param("rows") Byte rows);
 
-    //根据设备编号获取设备连接信息
-    //public int delDeviceBindDetailInfoByEquipmentCode(String equipmentCode);
+    //根据ieee+endpoint+deviceInfraredInfoId获取设备连接信息
+    public DeviceBindDetailInfo getDeviceBindDetailInfoByDeviceInfraredInfoId(@Param("address") Short address,
+                                                                              @Param("endpoint") Byte endpoint, @Param("deviceInfraredInfoId") Long deviceInfraredInfoId);
 
 
 }

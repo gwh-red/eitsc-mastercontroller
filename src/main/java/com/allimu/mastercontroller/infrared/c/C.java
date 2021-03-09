@@ -1213,7 +1213,7 @@ public final class C {
 	}
 	public static int[] GetAirData(int row)
 	{
-		System.out.println("row:"+row);
+		//System.out.println("row:"+row);
 		return arc_table[row];
 	}
 }

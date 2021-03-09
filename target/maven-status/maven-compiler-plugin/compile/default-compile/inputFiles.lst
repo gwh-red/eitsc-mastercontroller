@@ -1,3 +1,4 @@
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\impl\DeviceInfraredInfoServiceImpl.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\SaveEquipService.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\MD5Tools.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\ChannelHandlerContextMapSn.java
@@ -7,7 +8,6 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrar
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\ElectricityConsumption.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\MessageDecoder.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\LoginMessageDecoder.java
-D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\ShutdownHook.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\Equip.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\MessageTag.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\jedis\tool\RedisCache.java
@@ -18,6 +18,8 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\c\C.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\MessageEncoder.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\SnMapContextSchoolCode.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\config\Msg.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\DeviceInfredCode.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\InstructionCode.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\tool\Tools.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\LoginHandler.java
@@ -34,6 +36,7 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\AirBrandMap.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\dao\DeviceBindInfoDao.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\DeviceInfraredInfo.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\controller\DeviceInfraredInfoController.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\SnMapChannelHandlerContext.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\impl\DeviceServiceImpl.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\EnvironmentUnit.java
@@ -44,6 +47,9 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\dao\En
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\DateInter.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\util\CommonUtil.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\test\Test.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\config\CommonsResult.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\DeviceInfraredInfoService.java
+D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\config\ResultCode.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\value\Value.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\Constant.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\server\NettyServer.java

@@ -46,6 +46,8 @@ public class DeviceBindDetailInfo implements Serializable {
     private Short cols;
     //品牌
     private Byte rows;
+    // 红外遥控器id
+    private Long deviceInfraredInfoId;
     // 状态
     private Byte state;
     // 创建时间
@@ -211,6 +213,14 @@ public class DeviceBindDetailInfo implements Serializable {
         this.createTime = createTime;
     }
 
+    public Long getDeviceInfraredInfoId() {
+        return deviceInfraredInfoId;
+    }
+
+    public void setDeviceInfraredInfoId(Long deviceInfraredInfoId) {
+        this.deviceInfraredInfoId = deviceInfraredInfoId;
+    }
+
     public DeviceBindDetailInfo clone() {
         DeviceBindDetailInfo dbi = new DeviceBindDetailInfo();
         dbi.setSchoolCode(this.getSchoolCode());
@@ -251,6 +261,7 @@ public class DeviceBindDetailInfo implements Serializable {
                 ", ieee=" + ieee +
                 ", cols=" + cols +
                 ", rows=" + rows +
+                ", deviceInfraredInfoId=" + deviceInfraredInfoId +
                 ", state=" + state +
                 ", createTime=" + createTime +
                 '}';

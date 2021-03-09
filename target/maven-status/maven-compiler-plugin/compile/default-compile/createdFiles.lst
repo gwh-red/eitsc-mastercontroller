@@ -5,6 +5,8 @@ com\allimu\mastercontroller\netty\server\NettyServer.class
 com\allimu\mastercontroller\netty\model\MessageTag.class
 com\allimu\mastercontroller\netty\config\ChannelHandlerContextMapSn.class
 com\allimu\mastercontroller\netty\config\ServerHandler.class
+com\allimu\mastercontroller\config\Msg.class
+com\allimu\mastercontroller\service\DeviceInfraredInfoService.class
 com\allimu\mastercontroller\infrared\test\Test.class
 com\allimu\mastercontroller\jedis\tool\RedisCache.class
 com\allimu\mastercontroller\netty\model\Equip.class
@@ -16,6 +18,7 @@ com\allimu\mastercontroller\infrared\util\CreateCodeUtil.class
 com\allimu\mastercontroller\infrared\value\Value$DVD.class
 com\allimu\mastercontroller\infrared\data\KeyData.class
 com\allimu\mastercontroller\netty\config\SaveEquipService$1.class
+com\allimu\mastercontroller\netty\model\DeviceInfredCode.class
 com\allimu\mastercontroller\dao\EquipDao.class
 com\allimu\mastercontroller\netty\model\JkCode.class
 com\allimu\mastercontroller\infrared\data\AirData.class
@@ -29,6 +32,7 @@ com\allimu\mastercontroller\dao\DeviceInfraredInfoDao.class
 com\allimu\mastercontroller\infrared\data\KnownLib.class
 com\allimu\mastercontroller\netty\model\JkTestCode.class
 com\allimu\mastercontroller\netty\config\NettyServerInitializer.class
+com\allimu\mastercontroller\config\CommonsResult.class
 com\allimu\mastercontroller\infrared\value\Value$FANS.class
 com\allimu\mastercontroller\netty\code\TypeConverter.class
 com\allimu\mastercontroller\infrared\value\Value$TV.class
@@ -53,7 +57,7 @@ com\allimu\mastercontroller\dao\DeviceBindInfoDao.class
 com\allimu\mastercontroller\netty\model\ElectricityConsumption.class
 com\allimu\mastercontroller\infrared\value\Value.class
 com\allimu\mastercontroller\netty\code\MD5Tools.class
-com\allimu\mastercontroller\netty\config\ShutdownHook.class
+com\allimu\mastercontroller\config\ResultCode.class
 com\allimu\mastercontroller\dao\DeviceBindDetailInfoDao.class
 com\allimu\mastercontroller\infrared\c\C.class
 com\allimu\mastercontroller\netty\code\EnvironmentUnit.class
@@ -67,5 +71,7 @@ com\allimu\mastercontroller\netty\model\ElectricPower.class
 com\allimu\mastercontroller\infrared\value\Value$STB.class
 com\allimu\mastercontroller\netty\code\MessageDecoder.class
 com\allimu\mastercontroller\service\impl\DeviceServiceImpl.class
+com\allimu\mastercontroller\controller\DeviceInfraredInfoController.class
 com\allimu\mastercontroller\infrared\tool\Tools.class
 com\allimu\mastercontroller\netty\config\LoginHandler.class
+com\allimu\mastercontroller\service\impl\DeviceInfraredInfoServiceImpl.class

@@ -30,6 +30,10 @@ public class DeviceInfraredInfo implements Serializable {
     private String name;
     // sn码
     private String sn;
+    //红外学码
+    private String infraredCode;
+    // 红外学码 是1不是0
+    private Long isInfraredCode;
     // 创建时间
     private Date createTime;
 
@@ -126,6 +130,22 @@ public class DeviceInfraredInfo implements Serializable {
     }
 
 
+    public String getInfraredCode() {
+        return infraredCode;
+    }
+
+    public void setInfraredCode(String infraredCode) {
+        this.infraredCode = infraredCode;
+    }
+
+    public Long getIsInfraredCode() {
+        return isInfraredCode;
+    }
+
+    public void setIsInfraredCode(Long isInfraredCode) {
+        this.isInfraredCode = isInfraredCode;
+    }
+
     @Override
     public String toString() {
         return "DeviceInfraredInfo{" +
@@ -139,6 +159,8 @@ public class DeviceInfraredInfo implements Serializable {
                 ", nameLen=" + nameLen +
                 ", name='" + name + '\'' +
                 ", sn='" + sn + '\'' +
+                ", infraredCode='" + infraredCode + '\'' +
+                ", isInfraredCode=" + isInfraredCode +
                 ", createTime=" + createTime +
                 '}';
     }

@@ -11,9 +11,13 @@ public interface DeviceInfraredInfoDao {
     // 保存设备连接信息
     public int saveDerviceInfraredInfo(DeviceInfraredInfo deviceInfraredInfo);
 
+    //
     public DeviceInfraredInfo getDeviceInfraredInfoByAddress(@Param("address") Short address, @Param("endpoint") Byte endpoint, @Param("cols") Short cols,
                                                              @Param("rows") Byte rows);
 
     public List<DeviceInfraredInfo> getDeviceInfraredInfo(@Param("address") Short address, @Param("endpoint") Byte endpoint);
+
+    // 根据id查询码
+    public DeviceInfraredInfo getDeviceInfraredInfoId(@Param("id") Long id);
 
 }

@@ -54,10 +54,12 @@ public class DeviceServiceImpl implements DeviceService {
 
         DeviceInfraredInfo deviceInfraredInfo = (DeviceInfraredInfo) message.getObject();
 
-        deviceInfraredInfo.setCreateTime(new Date());
-        deviceInfraredInfo.setSn(message.getSn());
         DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(deviceInfraredInfo.getAddress(), deviceInfraredInfo.getEndpoint(), deviceInfraredInfo.getCols(), deviceInfraredInfo.getRows());
         if (dii == null) {
+
+            deviceInfraredInfo.setCreateTime(new Date());
+            deviceInfraredInfo.setSn(message.getSn());
+
             deviceInfraredInfoDao.saveDerviceInfraredInfo(deviceInfraredInfo);
         } else {
             System.out.println("遥控器指令已获取！");
@@ -108,28 +110,43 @@ public class DeviceServiceImpl implements DeviceService {
 
             //根据短地址端点地址查询红外控制器的遥控器
             List<DeviceInfraredInfo> deviceInfraredInfoList = deviceInfraredInfoDao.getDeviceInfraredInfo(deviceBindDetailInfo.getAddress(), deviceBindDetailInfo.getEndpoint());
+
             // 查看红外是否绑定设备
             if (deviceInfraredInfoList != null) {
                 //如果红外设备一条都没
                 if (deviceBindDetailInfoListByIeee == null) {
                     for (int i = 0; i < deviceInfraredInfoList.size(); i++) {
+
                         deviceBindDetailInfo.setCols(deviceInfraredInfoList.get(i).getCols());
                         deviceBindDetailInfo.setRows(deviceInfraredInfoList.get(i).getRows());
+                        deviceBindDetailInfo.setDeviceInfraredInfoId(deviceInfraredInfoList.get(i).getId());
                         deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
                         buildDeviceBindInfo(deviceBindDetailInfo);
                     }
                 } else {
                     for (int i = 0; i < deviceInfraredInfoList.size(); i++) {
                         DeviceBindDetailInfo deviceBindDetailInfoByClos = deviceBindDetailInfoDao.getDeviceBindDetailInfoByClos(deviceInfraredInfoList.get(i).getAddress(), deviceInfraredInfoList.get(i).getEndpoint(), deviceInfraredInfoList.get(i).getCols(), deviceInfraredInfoList.get(i).getRows());
-                        if (deviceBindDetailInfoByClos != null) {
-                            deviceBindDetailInfoByClos.setCols(deviceInfraredInfoList.get(i).getCols());
-                            deviceBindDetailInfoByClos.setRows(deviceInfraredInfoList.get(i).getRows());
-                            deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfo);
-                        } else {
+                        DeviceBindDetailInfo deviceBindDetailInfoByDeviceInfraredInfoId = deviceBindDetailInfoDao.getDeviceBindDetailInfoByDeviceInfraredInfoId(deviceInfraredInfoList.get(i).getAddress(), deviceInfraredInfoList.get(i).getEndpoint(), deviceInfraredInfoList.get(i).getId());
+                        //如果根据Clos+rows 和 根据红外遥控器id 都等于null 就说明需要新增
+                        if (deviceBindDetailInfoByClos == null && deviceBindDetailInfoByDeviceInfraredInfoId == null) {
                             deviceBindDetailInfo.setCols(deviceInfraredInfoList.get(i).getCols());
                             deviceBindDetailInfo.setRows(deviceInfraredInfoList.get(i).getRows());
+                            deviceBindDetailInfo.setDeviceInfraredInfoId(deviceInfraredInfoList.get(i).getId());
                             deviceBindDetailInfoDao.saveDeviceBindDetailInfo(deviceBindDetailInfo);
                             buildDeviceBindInfo(deviceBindDetailInfo);
+                        } else {
+                            if (deviceBindDetailInfoByClos != null) {
+                                deviceBindDetailInfoByClos.setCols(deviceInfraredInfoList.get(i).getCols());
+                                deviceBindDetailInfoByClos.setRows(deviceInfraredInfoList.get(i).getRows());
+                                deviceBindDetailInfoByClos.setDeviceInfraredInfoId(deviceInfraredInfoList.get(i).getId());
+                                deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfoByClos);
+                            } else {
+                                deviceBindDetailInfoByDeviceInfraredInfoId.setCols(deviceInfraredInfoList.get(i).getCols());
+                                deviceBindDetailInfoByDeviceInfraredInfoId.setRows(deviceInfraredInfoList.get(i).getRows());
+                                deviceBindDetailInfoByDeviceInfraredInfoId.setDeviceInfraredInfoId(deviceInfraredInfoList.get(i).getId());
+                                deviceBindDetailInfoDao.updateDeviceBindDetailInfo(deviceBindDetailInfoByDeviceInfraredInfoId);
+                            }
+
                         }
                     }
                 }
