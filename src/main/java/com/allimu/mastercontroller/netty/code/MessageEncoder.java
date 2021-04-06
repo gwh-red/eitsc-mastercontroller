@@ -37,7 +37,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
     //生成指令
     private void instructionCodeToByte(ByteBuf sendBuf, InstructionCode req) {
         byte type = req.getType();
-        System.out.println("MessageEecoder-type----:" + type);
+        /*System.out.println("MessageEecoder-type----:" + type);*/
         if (type == (byte) 0x81) {
             getAllDevice(sendBuf, req);
         } else if (type == (byte) 0x82 || type == (byte) 0xad) {

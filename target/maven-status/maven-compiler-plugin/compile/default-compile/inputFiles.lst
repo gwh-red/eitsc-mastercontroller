@@ -1,4 +1,3 @@
-D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\impl\DeviceInfraredInfoServiceImpl.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\SaveEquipService.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\MD5Tools.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\ChannelHandlerContextMapSn.java
@@ -36,7 +35,6 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\AirBrandMap.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\dao\DeviceBindInfoDao.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\model\DeviceInfraredInfo.java
-D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\controller\DeviceInfraredInfoController.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\config\SnMapChannelHandlerContext.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\impl\DeviceServiceImpl.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\EnvironmentUnit.java
@@ -48,7 +46,6 @@ D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\util\CommonUtil.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\test\Test.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\config\CommonsResult.java
-D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\service\DeviceInfraredInfoService.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\config\ResultCode.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\infrared\value\Value.java
 D:\yinhu\eitsc-mastercontroller\src\main\java\com\allimu\mastercontroller\netty\code\Constant.java

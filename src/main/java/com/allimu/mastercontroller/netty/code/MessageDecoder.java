@@ -52,16 +52,16 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setSn(ChannelHandlerContextMapSn.getMapping(nodeIndex));
         // read length
         in.readByte();
-        if (tag != (byte) 0x70) {
+        /*if (tag != (byte) 0x70) {
             System.out.println("MessageDecoder-tag----:" + tag);
-        }
+        }*/
         // 根据tag解码 0x01这些是16进制
         if (tag == (byte) 0x01) {
-            reciveAllDevice(message, in);
+            reciveAllDevice(message, in);//获取当前连接的设备-应答数据结构
         } else if (tag == (byte) 0x07 || tag == (byte) 0xb2) {
-            reciveDeviceState(message, in);
+            reciveDeviceState(message, in); //获取指定设备的开关状态 -应答数据结构
         } else if (tag == (byte) 0x70) {
-            reciveSensorData(message, in);
+            reciveSensorData(message, in);//获取环境数据
         } else if (tag == (byte) 0xb5) {
             reciveElectric(message, in);
         } else if (tag == (byte) 0xb6) {
@@ -142,7 +142,6 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         // read sn
         deviceBindDetailInfo.setSn(TypeConverter.byteBufToHexString(in.readBytes(in.readByte())));
         // set isUpload
-
         deviceBindDetailInfo.setIsUpload(false);
         // set schoolcode
         deviceBindDetailInfo.setSchoolCode(SnMapContextSchoolCode.getMapping(deviceBindDetailInfo.getSn()));

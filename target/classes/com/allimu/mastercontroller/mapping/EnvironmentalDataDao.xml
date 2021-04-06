@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="getEnvironmentalData" resultType="EnvironmentalData">
 		SELECT * FROM
-		environmental_data WHERE is_upload=false AND school_code = #{schoolCode} and create_time >= now()-interval 3 minute
+		environmental_data WHERE is_upload=false AND school_code = #{schoolCode} and create_time >= now()-interval 1 minute
 	</select>
 	
 	<update id="updateEnvironmentalDataList">

@@ -37,7 +37,7 @@ public class CommonUtil {
 
         Properties ps = new Properties();
 
-        try {
+     /*   try {
             ps.load(new InputStreamReader(new FileInputStream("/usr/local/wangguan-common.properties"), "UTF-8"));
             schoolCodes = TypeConverter.strToLongs(ps.getProperty("schoolCode"));
             schoolNames = TypeConverter.strToStrs(ps.getProperty("schoolName"));
@@ -48,21 +48,20 @@ public class CommonUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
-      /* try {
+       try {
             ps.load(new InputStreamReader(CommonUtil.class.getClassLoader().getResourceAsStream("wangguan-common.properties"), "UTF-8"));
             schoolCodes = TypeConverter.strToLongs(ps.getProperty("schoolCode"));
             schoolNames = TypeConverter.strToStrs(ps.getProperty("schoolName"));
             tcpServerPort = Integer.parseInt(ps.getProperty("tcpServerPort"));
             remoteServiceUrl = ps.getProperty("remoteServiceUrl");
             delay = Long.parseLong(ps.getProperty("delay"));
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 
