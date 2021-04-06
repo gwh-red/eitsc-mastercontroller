@@ -40,10 +40,10 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
         if (message.getType() != null) {
             String name = message.getName();
             String password = message.getPassword();
-            String sn = message.getSn().toUpperCase();
+            String sn = message.getSn();
             System.out.println("客户端" + ctx.channel().remoteAddress() + "的登录消息 ：" + message);
             // 登录验证，账号密码验证
-            if (name != null && password != null && name.equals("admin")
+            if (name != null && password != null && "admin".equals(name)
                     && password.equals(MD5Tools.string2MD5("admin"))) {
                 String nodeIndex = ctx.channel().remoteAddress().toString();
                 // 重复登陆，拒绝
@@ -170,6 +170,7 @@ public class LoginHandler extends SimpleChannelInboundHandler<Message> {
      * @param cause
      * @throws Exception
      */
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println(">> 网关断开连接了...");
 

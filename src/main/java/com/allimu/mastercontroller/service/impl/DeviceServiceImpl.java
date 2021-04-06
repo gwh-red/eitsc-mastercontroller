@@ -269,6 +269,7 @@ public class DeviceServiceImpl implements DeviceService {
     /**
      * 异常处理，如果网关断线，设置全部网关底下的设备为离线状态
      */
+    @Override
     public void exceptionHandling(String sn) {
         List<DeviceBindDetailInfo> deviceBindDetailInfoList = deviceBindDetailInfoDao.getDeviceBindDetailInfoBySn(sn);
         if (deviceBindDetailInfoList != null && deviceBindDetailInfoList.size() > 0) {

@@ -6,7 +6,6 @@ com\allimu\mastercontroller\netty\model\MessageTag.class
 com\allimu\mastercontroller\netty\config\ChannelHandlerContextMapSn.class
 com\allimu\mastercontroller\netty\config\ServerHandler.class
 com\allimu\mastercontroller\config\Msg.class
-com\allimu\mastercontroller\service\DeviceInfraredInfoService.class
 com\allimu\mastercontroller\infrared\test\Test.class
 com\allimu\mastercontroller\jedis\tool\RedisCache.class
 com\allimu\mastercontroller\netty\model\Equip.class
@@ -71,7 +70,5 @@ com\allimu\mastercontroller\netty\model\ElectricPower.class
 com\allimu\mastercontroller\infrared\value\Value$STB.class
 com\allimu\mastercontroller\netty\code\MessageDecoder.class
 com\allimu\mastercontroller\service\impl\DeviceServiceImpl.class
-com\allimu\mastercontroller\controller\DeviceInfraredInfoController.class
 com\allimu\mastercontroller\infrared\tool\Tools.class
 com\allimu\mastercontroller\netty\config\LoginHandler.class
-com\allimu\mastercontroller\service\impl\DeviceInfraredInfoServiceImpl.class

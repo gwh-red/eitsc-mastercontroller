@@ -23,7 +23,7 @@ public class CreateCodeUtil {
         // 设置我们的空调厂家，该数据本来应该从主机读取的，此处先写死一个固定值
         // 例如码库里面，美的排在数组第一位，从0开始计算，也可以从通信协议1.41返回值取brand或者rows，这两个值在我们app保存是一样的
         if (mAirRows == null) {
-            kd.mAirRows = 0;
+            KeyData.mAirRows = 0;
         } else {
             kd.mAirRows = mAirRows;
         }

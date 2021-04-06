@@ -70,7 +70,7 @@ public class CodeTask {
             String str = remoteService.getWgEquipBySchoolCode(schoolCodes[i]);
             JSONObject jsonObject = JSONObject.parseObject(str);
             String res = jsonObject.getString("data");
-            if (res != null && !res.equals("[]")) {
+            if (res != null && !"[]".equals(res) ) {
                 List<Equip> snEquipList = JSON.parseObject(res, new TypeReference<ArrayList<Equip>>() {
                 });
                 for (Equip snEquip : snEquipList) {
@@ -103,8 +103,8 @@ public class CodeTask {
      */
     @Scheduled(cron = "*/5 * * * * ?")
     public void svaeToCloud() {
-        int isUpload = 0;
         for (int i = 0; i < schoolCodes.length; i++) {
+            int isUpload = 0;
             // 获取未上传到云端的设备绑定信息
             List<DeviceBindInfo> deviceBindInfoList = deviceBindInfoDao.getDeviceBindInfo(schoolCodes[i]);
             //获取未上传到云端的设备状态信息
@@ -177,10 +177,8 @@ public class CodeTask {
                             }
                             deviceBindInfo.setTempId(tempReflect.getTempId());
                             deviceBindInfoDao.updateDeviceBindInfoId(deviceBindInfo);
-
                             remoteService.updateTempReflectByWg(tempReflect);
                         }
-
                     }
                 }
             }
@@ -260,7 +258,7 @@ public class CodeTask {
         for (int i = 0; i < schoolCodes.length; i++) {
 
             List<DeviceBindDetailInfo> eleDeviceList = deviceBindDetailInfoDao.getEleDevice(schoolCodes[i]);
-            if (eleDeviceList != null && eleDeviceList.size() > 0)
+            if (eleDeviceList != null && eleDeviceList.size() > 0) {
                 for (DeviceBindDetailInfo eleDevice : eleDeviceList) {
                     ctx2 = SnMapChannelHandlerContext.getMapping(eleDevice.getSn());
                     if (ctx2 != null) {
@@ -269,6 +267,7 @@ public class CodeTask {
                         }
                     }
                 }
+            }
         }
     }
 
@@ -326,9 +325,9 @@ public class CodeTask {
 
 
                         if (hexStr != null) {
-                            byte[] data = TypeConverter.hexStringToBytes(hexStr);
+                            byte[] data = TypeConverter.hexStrToBytes(hexStr.toLowerCase());
                             System.out.println("hexStr:" + hexStr);
-                           // System.out.println("data:" + data + "data长度：" + data.length);
+                            // System.out.println("data:" + data + "data长度：" + data.length);
                             instructionCode.setData(data);
                             instructionCode.setData_len((byte) data.length);
                         }
@@ -347,7 +346,7 @@ public class CodeTask {
                             instructionCode.setState((byte) 0x00);
                         }
                     }
-                    instructionCode.setSn(ddi.getSn().toUpperCase());
+                    instructionCode.setSn(ddi.getSn());
                     instructionCode.setAddress(ddi.getAddress());
                     instructionCode.setEndpoint(ddi.getEndpoint());
                     instructionCodeList.add(instructionCode);
@@ -374,6 +373,7 @@ public class CodeTask {
                     instructionCode.setType((byte) 0x9f);
                     instructionCodeList.add(instructionCode);
                 } else {
+
                     DeviceBindDetailInfo ddi = deviceBindDetailInfoDao.getDeviceBindDetailInfoByEquipmentCode(jc.getEquipmentCode());
                     if (ddi != null) {
                         //DeviceInfraredInfo dii = deviceInfraredInfoDao.getDeviceInfraredInfoByAddress(ddi.getAddress(), ddi.getEndpoint(), ddi.getCols(), TypeConverter.intToHexByte(AirBrandMap.getIndex(jc.getBrandName())));
@@ -386,8 +386,7 @@ public class CodeTask {
                                 jc.setValue((byte) 0x02);
                             }
                         }
-                        byte codetype;
-                        //Constant.ZNCL_TYPENAME.equals(jc.getEquipmentType()) || 待调试
+                        byte codetype;                          //Constant.ZNCL_TYPENAME.equals(jc.getEquipmentType()) || 待调试
                         if (Constant.KT_TYPENAME.equals(jc.getEquipmentType()) ||
                                 Constant.ZNCL_TYPENAME.equals(jc.getEquipmentType()) || Constant.PC_TYPENAME.equals(jc.getEquipmentType())) {
                             codetype = codeReflectDao.getCodeTypeByType(jc.getEquipmentType());
@@ -402,31 +401,23 @@ public class CodeTask {
                             if (Constant.PC_TYPENAME.equals(jc.getEquipmentType())) {
                                 //电脑
                                 DeviceInfraredInfo deviceInfraredInfoId = deviceInfraredInfoDao.getDeviceInfraredInfoId(ddi.getDeviceInfraredInfoId());
+
                                 hexStr = deviceInfraredInfoId.getInfraredCode();
                             } else {
                                 //空调
                                 hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             }
-
-
-                            /*if (Constant.OPEN.equals(jc.getType())) {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
-                                        jc.getValue(), jc.getMode(), jc.getTemperature());
-                            } else {
-                                hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
-                                        jc.getValue(), jc.getMode(), jc.getTemperature());
-                            }*/
                             System.out.println("hexStr:" + hexStr);
                             if (hexStr != null) {
-                                byte[] data = TypeConverter.hexStringToBytes(hexStr.toUpperCase());
+                                byte[] data = TypeConverter.hexStrToBytes(hexStr.toLowerCase());
                                 System.out.println("data:" + data + "data长度：" + data.length);
                                 instructionCode.setData(data);
                                 instructionCode.setData_len((byte) data.length);
                             }
                         }
                         instructionCode.setType(codetype);
-                        instructionCode.setSn(ddi.getSn().toUpperCase());
+                        instructionCode.setSn(ddi.getSn());
                         instructionCode.setAddress(ddi.getAddress());
                         instructionCode.setEndpoint(ddi.getEndpoint());
                         instructionCode.setState(jc.getValue());
