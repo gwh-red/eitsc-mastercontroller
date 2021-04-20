@@ -49,6 +49,9 @@ public class CodeTask {
     @Autowired
     private CodeReflectDao codeReflectDao;
 
+    @Autowired
+    private DeviceInfraredCodeDao deviceInfraredCodeDao;
+
     private ChannelHandlerContext ctx1;
 
     private ChannelHandlerContext ctx2;
@@ -399,6 +402,9 @@ public class CodeTask {
                             String hexStr = null;
 
                             if (Constant.PC_TYPENAME.equals(jc.getEquipmentType())) {
+
+                                //DeviceInfraredCode deviceInfraredCode = deviceInfraredCodeDao.getDeviceInfraredCode();0
+
                                 //电脑
                                 DeviceInfraredInfo deviceInfraredInfoId = deviceInfraredInfoDao.getDeviceInfraredInfoId(ddi.getDeviceInfraredInfoId());
 

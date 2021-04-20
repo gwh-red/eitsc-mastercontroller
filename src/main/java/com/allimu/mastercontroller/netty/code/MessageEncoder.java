@@ -151,7 +151,10 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getState());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
-        System.out.println("MessageEncoder.setDeviceState()：" + sendBuf.readableBytes());
+        /*for (int i = 0; i < sendBuf.capacity()-sendBuf.writableBytes(); i++) {
+            System.out.print(String.format("%02X", sendBuf.getByte(i)));
+        }
+        System.out.println();*/
     }
 
     //获取指定设备的开关状态
@@ -357,9 +360,10 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
 
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
-        for (int i = 0; i < sendBuf.capacity(); i++) {
+       /* for (int i = 0; i < sendBuf.capacity()-sendBuf.writableBytes(); i++) {
             System.out.print(String.format("%02X", sendBuf.getByte(i)));
         }
+        System.out.println();*/
         //printCode(sendBuf);
     }
 

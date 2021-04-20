@@ -2,6 +2,8 @@ com\allimu\mastercontroller\dao\DeviceStateDao.class
 com\allimu\mastercontroller\netty\model\Message.class
 com\allimu\mastercontroller\infrared\value\Value$AIR.class
 com\allimu\mastercontroller\netty\server\NettyServer.class
+com\allimu\mastercontroller\netty\model\DeviceInfraredCode.class
+com\allimu\mastercontroller\dao\DeviceInfraredCodeDao.class
 com\allimu\mastercontroller\netty\model\MessageTag.class
 com\allimu\mastercontroller\netty\config\ChannelHandlerContextMapSn.class
 com\allimu\mastercontroller\netty\config\ServerHandler.class
@@ -17,7 +19,6 @@ com\allimu\mastercontroller\infrared\util\CreateCodeUtil.class
 com\allimu\mastercontroller\infrared\value\Value$DVD.class
 com\allimu\mastercontroller\infrared\data\KeyData.class
 com\allimu\mastercontroller\netty\config\SaveEquipService$1.class
-com\allimu\mastercontroller\netty\model\DeviceInfredCode.class
 com\allimu\mastercontroller\dao\EquipDao.class
 com\allimu\mastercontroller\netty\model\JkCode.class
 com\allimu\mastercontroller\infrared\data\AirData.class
