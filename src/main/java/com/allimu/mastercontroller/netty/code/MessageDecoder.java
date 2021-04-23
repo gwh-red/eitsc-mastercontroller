@@ -99,7 +99,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         //NameLen
         deviceInfraredInfo.setNameLen(in.readByte());
         //Name
-        deviceInfraredInfo.setName(TypeConverter.byteBufToHexString(in.readBytes(TypeConverter.byteToHexInt(deviceInfraredInfo.getNameLen()))));
+        deviceInfraredInfo.setName(TypeConverter.byteBufToString(in.readBytes(TypeConverter.byteToHexInt(deviceInfraredInfo.getNameLen()))));
         //System.out.println("deviceInfraredInfo:" + deviceInfraredInfo);
         message.setObject(deviceInfraredInfo);
     }

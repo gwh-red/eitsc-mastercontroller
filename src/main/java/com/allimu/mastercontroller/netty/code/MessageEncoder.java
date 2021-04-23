@@ -37,7 +37,6 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
     //生成指令
     private void instructionCodeToByte(ByteBuf sendBuf, InstructionCode req) {
         byte type = req.getType();
-        /*System.out.println("MessageEecoder-type----:" + type);*/
         if (type == (byte) 0x81) {
             getAllDevice(sendBuf, req);
         } else if (type == (byte) 0x82 || type == (byte) 0xad) {
@@ -151,10 +150,6 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getState());
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
-        /*for (int i = 0; i < sendBuf.capacity()-sendBuf.writableBytes(); i++) {
-            System.out.print(String.format("%02X", sendBuf.getByte(i)));
-        }
-        System.out.println();*/
     }
 
     //获取指定设备的开关状态
@@ -350,21 +345,12 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
         sendBuf.writeByte(req.getEndpoint());
         sendBuf.writeShort(0);
 
-        //sendBuf.writeByte(TypeConverter.hexStrToBytes(req.getRedCode()).length);
-        //sendBuf.writeBytes(TypeConverter.hexStrToBytes(req.getRedCode()));
-
         sendBuf.writeByte((byte) req.getData().length);
-        //System.out.println(Arrays.toString(req.getData()).toString());
 
         sendBuf.writeBytes(req.getData());
 
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
-       /* for (int i = 0; i < sendBuf.capacity()-sendBuf.writableBytes(); i++) {
-            System.out.print(String.format("%02X", sendBuf.getByte(i)));
-        }
-        System.out.println();*/
-        //printCode(sendBuf);
     }
 
     @Async

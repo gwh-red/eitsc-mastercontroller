@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.allimu.mastercontroller.dao.DeviceInfraredCodeDao">
+
+    <select id="getDeviceInfraredCode" resultType="com.allimu.mastercontroller.netty.model.DeviceInfraredCode">
+
+        select *
+        from device_infrared_code
+        where brand = #{brand}
+          and brand_type = #{brandType}
+          and operation_type = #{operationType}
+          and equipment_type = #{equipmentType}
+          and school_code = #{schoolCode}
+
+    </select>
+</mapper>

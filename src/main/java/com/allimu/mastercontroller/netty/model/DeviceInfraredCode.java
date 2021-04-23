@@ -120,4 +120,19 @@ public class DeviceInfraredCode {
         this.deleted = deleted;
     }
 
+    @Override
+    public String toString() {
+        return "DeviceInfraredCode{" +
+                "id=" + id +
+                ", schoolCode=" + schoolCode +
+                ", brand='" + brand + '\'' +
+                ", brandType='" + brandType + '\'' +
+                ", operationType='" + operationType + '\'' +
+                ", equipmentType='" + equipmentType + '\'' +
+                ", infraredCode='" + infraredCode + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

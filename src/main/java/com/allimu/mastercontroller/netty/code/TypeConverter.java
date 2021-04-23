@@ -39,26 +39,34 @@ public class TypeConverter {
         return res;
     }
 
+    //16进制字符串转中文
+    public static String toStringHex2(String s) {
+        byte[] baKeyword = new byte[s.length() / 2];
+        for (int i = 0; i < baKeyword.length; i++) {
+            try {
+                baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(
+                        i * 2, i * 2 + 2), 16));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            s = new String(baKeyword, "utf-8");// UTF-16le:Not
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return s;
+    }
+
     /**
-     * 16进制字符串转byte[]
-     *
-     * @param hexString the hex string
-     * @return byte[]
+     * ByteBuf转中文
+     * @param in
+     * @return
      */
-    /*public static byte[] hexStringToBytes(String hexString) {
-        if (hexString == null || hexString.equals("")) {
-            return null;
-        }
-        hexString = hexString.toUpperCase();
-        int length = hexString.length() / 2;
-        char[] hexChars = hexString.toCharArray();
-        byte[] d = new byte[length];
-        for (int i = 0; i < length; i++) {
-            int pos = i * 2;
-            d[i] = (byte) (charToByteA(hexChars[pos]) << 4 | charToByteA(hexChars[pos + 1]));
-        }
-        return d;
-    }*/
+    public static String byteBufToString(ByteBuf in) {
+        return toStringHex2(byteBufToHexString(in));
+    }
+
 
     /**
      * 字节数组转整型

@@ -13,6 +13,7 @@
           and brand_type = #{brandType}
           and operation_type = #{operationType}
           and equipment_type = #{equipmentType}
+          and school_code = #{schoolCode}
 
     </select>
 </mapper>
