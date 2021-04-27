@@ -61,8 +61,6 @@ public class DeviceServiceImpl implements DeviceService {
             deviceInfraredInfo.setSn(message.getSn());
 
             deviceInfraredInfoDao.saveDerviceInfraredInfo(deviceInfraredInfo);
-        } else {
-            System.out.println("遥控器指令已获取！");
         }
 
 

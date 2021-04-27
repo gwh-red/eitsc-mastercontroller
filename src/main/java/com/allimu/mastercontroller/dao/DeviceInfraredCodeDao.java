@@ -11,6 +11,6 @@ public interface DeviceInfraredCodeDao {
      *
      * @return
      */
-    DeviceInfraredCode getDeviceInfraredCode(@Param("brand") String brand, @Param("brandType") String brandType, @Param("operationType") String operationType, @Param("equipmentType") String equipmentType, @Param("schoolCode") Long schoolCode);
+    DeviceInfraredCode getDeviceInfraredCode(@Param("brand") String brand, @Param("brandType") String brandType, @Param("operationType") String operationType, @Param("equipmentType") String equipmentType, @Param("schoolCode") Long schoolCode, @Param("codeType") Long codeType);
 
 }

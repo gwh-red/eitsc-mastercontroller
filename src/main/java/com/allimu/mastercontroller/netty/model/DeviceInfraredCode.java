@@ -27,6 +27,9 @@ public class DeviceInfraredCode {
     //码
     private String infraredCode;
 
+    //码
+    private String codeType;
+
     //创建时间
     private Date createTime;
 
@@ -120,6 +123,14 @@ public class DeviceInfraredCode {
         this.deleted = deleted;
     }
 
+    public String getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(String codeType) {
+        this.codeType = codeType;
+    }
+
     @Override
     public String toString() {
         return "DeviceInfraredCode{" +
@@ -130,6 +141,7 @@ public class DeviceInfraredCode {
                 ", operationType='" + operationType + '\'' +
                 ", equipmentType='" + equipmentType + '\'' +
                 ", infraredCode='" + infraredCode + '\'' +
+                ", codeType='" + codeType + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", deleted=" + deleted +

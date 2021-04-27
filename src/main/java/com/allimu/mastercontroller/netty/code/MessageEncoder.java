@@ -351,6 +351,7 @@ public class MessageEncoder extends MessageToMessageEncoder<InstructionCode> {
 
         sendBuf.setBytes(0, TypeConverter.shortToBytes((short) sendBuf.readableBytes()));
         sendBuf.setByte(10, sendBuf.readableBytes() - 11);
+
     }
 
     @Async
