@@ -87,19 +87,6 @@ public class CodeTask {
 
     }
 
-/*
-      //定时上传环境数据
-    public void svaeToEnvironment() {
-        int isUpload = 0;
-        List<EnvironmentalData> environmentalDataList = environmentalDataDao.getEnvironmentalData(schoolCode);
-        if (environmentalDataList != null && environmentalDataList.size() > 0) {
-            isUpload = remoteService.saveEnvironmentalData(environmentalDataList, schoolCode);
-            if (isUpload != 0) {
-                environmentalDataDao.updateEnvironmentalDataList(environmentalDataList);
-            }
-        }
-    }
-*/
 
     /**
      * 定时任务上传状态数据，耗电量，设备状态，设备临时绑定信息到云端
@@ -136,7 +123,6 @@ public class CodeTask {
             }
             if (environmentalDataList != null && environmentalDataList.size() > 0) {
                 isUpload = remoteService.saveEnvironmentalData(environmentalDataList, schoolCodes[i]);
-                System.out.println("返回结果：" + isUpload + "环境数据：" + environmentalDataList.size());
                 if (isUpload != 0) {
                     environmentalDataDao.updateEnvironmentalDataList(environmentalDataList);
                 }
@@ -404,7 +390,7 @@ public class CodeTask {
                                 hexStr = CreateCodeUtil.createCode(AirBrandMap.getIndex(jc.getBrandName()), (int) ddi.getCols(),
                                         jc.getValue(), jc.getMode(), jc.getTemperature());
                             } else {
-                                DeviceInfraredCode deviceInfraredCode = deviceInfraredCodeDao.getDeviceInfraredCode(jc.getBrandName(), jc.getModelName(), jc.getType(), jc.getEquipmentType(), jc.getSchoolCode());
+                                DeviceInfraredCode deviceInfraredCode = deviceInfraredCodeDao.getDeviceInfraredCode(jc.getBrandName(), jc.getModelName(), jc.getType(), jc.getEquipmentType(), jc.getSchoolCode(),1L);
 
 
                                 if (deviceInfraredCode != null && !"".equals(deviceInfraredCode.getInfraredCode())) {

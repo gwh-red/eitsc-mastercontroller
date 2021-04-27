@@ -50,7 +50,7 @@ public class CommonUtil {
             e.printStackTrace();
         }
 
-      /* try {
+       /*try {
             ps.load(new InputStreamReader(CommonUtil.class.getClassLoader().getResourceAsStream("wangguan-common.properties"), "UTF-8"));
             schoolCodes = TypeConverter.strToLongs(ps.getProperty("schoolCode"));
             schoolNames = TypeConverter.strToStrs(ps.getProperty("schoolName"));
